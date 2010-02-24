@@ -91,8 +91,6 @@ import java.util.List;
 import java.util.Properties;
 import java.lang.reflect.Field;
 
-import hudson.Util;
-
 /**
  * Class intended to be used by clients who wish to embed Maven into their applications
  *
@@ -883,8 +881,10 @@ public class MavenEmbedder
      * and not allowing this method to be called afterward.
      */
     private void activeProfiles() {
-        if(Util.fixEmptyAndTrim(profiles)==null)    return; // noop
-        for (String token : Util.tokenize(profiles, ",")) {
+        if(profiles==null)    return; // noop
+        for (String token : profiles.split(",")) {
+            token = token.trim();
+            if (token.length()==0)  continue;
             if (token.startsWith("-")) {
                 profileManager.explicitlyDeactivate(token.substring(1));
             } else if (token.startsWith("+")) {
