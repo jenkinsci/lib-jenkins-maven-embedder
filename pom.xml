@@ -1,4 +1,4 @@
-<?xml version="1.0"?><project>
+<?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>lib</artifactId>
     <groupId>org.jvnet.hudson</groupId>
@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-embedder</artifactId>
   <name>Maven Embedder with a few changes</name>
-  <version>2.0.4-hudson-1-SNAPSHOT</version>
+  <version>2.0.4-hudson-1</version>
 
   <dependencies>
     <dependency>
@@ -21,4 +21,10 @@
       <version>2.0.9</version>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/maven-embedder-2.0.4-hudson-1</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/maven-embedder-2.0.4-hudson-1</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/maven-embedder-2.0.4-hudson-1</url>
+  </scm>
 </project>
