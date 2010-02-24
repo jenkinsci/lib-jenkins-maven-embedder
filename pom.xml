@@ -5,11 +5,10 @@
     <version>1.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.jvnet.hudson</groupId>
   <artifactId>maven-embedder</artifactId>
-  <name>maven-embedder</name>
+  <name>Maven Embedder with a few changes</name>
   <version>2.0.4-hudson-1-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
