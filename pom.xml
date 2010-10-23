@@ -7,18 +7,109 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-embedder</artifactId>
   <name>Maven Embedder with a few changes</name>
-  <version>2.0.4-hudson-2-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
+  
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+  
+  <properties>
+    <aetherVersion>1.7</aetherVersion>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-embedder</artifactId>
-      <version>2.0.4</version>
+      <artifactId>maven-core</artifactId>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>2.0.9</version>
-    </dependency>
+      <artifactId>maven-artifact</artifactId>
+      <version>3.0</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>3.0</version>
+    </dependency>    
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-embedder</artifactId>
+      <version>3.0</version>
+    </dependency>  
+    
+    <dependency>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-inject-plexus</artifactId>
+      <version>1.4.2</version>
+    </dependency>    
+    
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-connector-wagon</artifactId>
+      <version>${aetherVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>      
+    </dependency>    
+    
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.8.0</version>
+    </dependency>    
+      
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <systemPropertyVariables>
+            <maven.home>${maven.home}</maven.home>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0-beta-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <id>ensure-no-plexus-container</id>
+            <configuration>
+              <rules>
+                <bannedDependencies>
+                  <excludes>
+                    <exclude>org.codehaus.plexus:plexus-container-default</exclude>
+                  </excludes>
+                  <message>
+                  ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.
+                  </message>
+                </bannedDependencies>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    
+    </plugins>
+  </build>
+  
 </project>
