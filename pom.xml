@@ -6,7 +6,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-embedder</artifactId>
-  <name>Maven Embedder with a few changes</name>
+  <name>Hudson Maven Embedder</name>
   <version>3.0-SNAPSHOT</version>
   
   <prerequisites>
@@ -79,6 +79,7 @@
         <configuration>
           <systemPropertyVariables>
             <maven.home>${maven.home}</maven.home>
+            <maven.version>${maven.version}</maven.version>
           </systemPropertyVariables>
         </configuration>
       </plugin>

@@ -26,10 +26,14 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.maven.artifact.ArtifactUtils;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
+import org.sonatype.aether.impl.VersionResolver;
+import org.sonatype.aether.resolution.VersionRangeRequest;
 
 
 

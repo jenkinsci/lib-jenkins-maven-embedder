@@ -86,6 +86,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * Class intended to be used by clients who wish to embed Maven into their applications
  *
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
+ * @author Olivier Lamy
  */
 public class MavenEmbedder
 {
@@ -108,59 +109,12 @@ public class MavenEmbedder
     public MavenEmbedder( File mavenHome, MavenRequest mavenRequest )
         throws MavenEmbedderException
     {
-        if ( mavenHome == null )
-        {
-            throw new IllegalArgumentException( "mavenHome cannot be null" );
-        }
-        if ( !mavenHome.exists() )
-        {
-            throw new IllegalArgumentException( "mavenHome must exists" );
-        }
         this.mavenHome = mavenHome;
         this.mavenRequest = mavenRequest;
-
-        
         ClassWorld world = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
 
-        // list all jar under mavenHome/lib
-
-        File libDirectory = new File( this.mavenHome, "lib" );
-        if ( !libDirectory.exists() )
-        {
-            throw new IllegalArgumentException( mavenHome.getPath() + " without lib directory" );
-        }
-
-        File[] jarFiles = libDirectory.listFiles( new FilenameFilter()
-        {
-
-            public boolean accept( File dir, String name )
-            {
-                return name.endsWith( ".jar" );
-            }
-        } );
+        ClassRealm classRealm = MavenEmbedderUtils.buildClassRealm( mavenHome, world, Thread.currentThread().getContextClassLoader() );
         
-        
-        AntClassLoader antClassLoader = new AntClassLoader( Thread.currentThread().getContextClassLoader(), false );
-        
-
-        for ( File jarFile : jarFiles )
-        {
-                antClassLoader.addPathComponent( jarFile );
-        }
-        
-        ClassRealm classRealm = new ClassRealm( world, "maven", Thread.currentThread().getContextClassLoader() );// antClassLoader );
-
-        for ( File jarFile : jarFiles )
-        {
-            try
-            {
-                classRealm.addURL( jarFile.toURI().toURL() );
-            }
-            catch ( MalformedURLException e )
-            {
-                throw new MavenEmbedderException( e.getMessage(), e );
-            }
-        }
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
 
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() )
@@ -328,11 +282,11 @@ public class MavenEmbedder
         SettingsBuildingRequest settingsBuildingRequest = new DefaultSettingsBuildingRequest();
         if ( this.mavenRequest.getGlobalSettingsFile() != null )
         {
-            this.mavenExecutionRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
+            settingsBuildingRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
         }
         if ( this.mavenRequest.getUserSettingsFile() != null )
         {
-            this.mavenExecutionRequest.setUserSettingsFile( new File( this.mavenRequest.getUserSettingsFile() ) );
+            settingsBuildingRequest.setUserSettingsFile( new File( this.mavenRequest.getUserSettingsFile() ) );
         }
         
         settingsBuildingRequest.setUserProperties( this.mavenRequest.getUserProperties() );
