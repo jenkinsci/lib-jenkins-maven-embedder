@@ -18,23 +18,21 @@ package hudson.maven;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.maven.BuildFailureException;
 import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidRepositoryException;
 import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
@@ -42,13 +40,10 @@ import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionRequestPopulationException;
 import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
-import org.apache.maven.lifecycle.LifecycleExecutionException;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -63,8 +58,6 @@ import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
-import org.apache.maven.wagon.events.TransferListener;
-import org.apache.tools.ant.AntClassLoader;
 import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.DefaultContainerConfiguration;
 import org.codehaus.plexus.DefaultPlexusContainer;
@@ -75,10 +68,8 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.LoggerManager;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 
@@ -169,10 +160,11 @@ public class MavenEmbedder
         }
     }
     
-    public MavenEmbedder( ClassLoader mavenClassLoader, MavenRequest mavenRequest) throws MavenEmbedderException
+    public MavenEmbedder( ClassLoader mavenClassLoader, MavenRequest mavenRequest )
+    throws MavenEmbedderException
     {
         this(mavenClassLoader, null, mavenRequest);
-    }    
+    }
     
     private PlexusContainer buildPlexusContainer(ContainerConfiguration containerConfiguration) 
         throws MavenEmbedderException
@@ -386,18 +378,6 @@ public class MavenEmbedder
         
     }
 
-    public MavenProject readProjectWithDependencies( File mavenProject, TransferListener transferListener )
-        throws ProjectBuildingException, ArtifactResolutionException, ArtifactNotFoundException {
-        //FIXME read one project
-        return null;
-    }
-
-    public MavenProject readProjectWithDependencies( File mavenProject )
-        throws ProjectBuildingException, ArtifactResolutionException, ArtifactNotFoundException
-    {
-        //FIXME read one project
-        return null;
-    }
 
     public List<MavenProject> collectProjects( File basedir, String[] includes, String[] excludes )
         throws MojoExecutionException, MavenEmbedderException {
@@ -427,16 +407,33 @@ public class MavenEmbedder
     // Artifacts
     // ----------------------------------------------------------------------
 
-    public Artifact createArtifact( String groupId, String artifactId, String version, String scope, String type )
+    public Artifact createArtifact( String groupId, String artifactId, String version, String scope, String type ) 
+        throws MavenEmbedderException
     {
-        // FIXME ?
-        return null;
+        try
+        {
+            RepositorySystem repositorySystem = lookup( RepositorySystem.class );
+            return repositorySystem.createArtifact( groupId, artifactId, version, scope, type );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new MavenEmbedderException(e.getMessage(), e);
+        }
+        
     }
 
     public Artifact createArtifactWithClassifier( String groupId, String artifactId, String version, String type, String classifier )
+        throws MavenEmbedderException
     {
-        // FIXME ?
-        return null;
+        try
+        {
+            RepositorySystem repositorySystem = lookup( RepositorySystem.class );
+            return repositorySystem.createArtifactWithClassifier( groupId, artifactId, version, type, classifier );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new MavenEmbedderException(e.getMessage(), e);
+        }
     }
 
     public void resolve( Artifact artifact, List remoteRepositories, ArtifactRepository localRepository )
@@ -444,20 +441,6 @@ public class MavenEmbedder
     {
         // FIXME ?
     }
-
-    // ----------------------------------------------------------------------
-    // Plugins
-    // ----------------------------------------------------------------------
-
-    
-    public PluginDescriptor getPluginDescriptor( String artifactId )
-        throws MavenEmbedderException {
-        PluginDescriptor pluginDescriptor;
-
-        // FIXME ?
-        return null;
-    }
-
 
     // ----------------------------------------------------------------------
     // Execution of phases/goals
@@ -477,28 +460,6 @@ public class MavenEmbedder
             Thread.currentThread().setContextClassLoader( original );
         }
     }
-
-    public void execute( MavenRequest mavenRequest, PlexusContainer plexusContainer )
-        throws CycleDetectedException, LifecycleExecutionException, BuildFailureException, DuplicateProjectException
-    {
-        // FIXME ?
-    }
-
-    // ----------------------------------------------------------------------
-    // Lifecycle information
-    // ----------------------------------------------------------------------
-
-    public List<String> getLifecyclePhases()
-        throws MavenEmbedderException
-    {
-        // FIXME ??
-        return null;
-    }
-
-    // ----------------------------------------------------------------------
-    // Remote Repository
-    // ----------------------------------------------------------------------
-
     // ----------------------------------------------------------------------
     // Local Repository
     // ----------------------------------------------------------------------
@@ -508,7 +469,8 @@ public class MavenEmbedder
     public static final String DEFAULT_LAYOUT_ID = "default";
 
     public ArtifactRepository createLocalRepository( File localRepository )
-        throws ComponentLookupException {
+        throws ComponentLookupException 
+    {
         return createLocalRepository( localRepository.getAbsolutePath(), DEFAULT_LOCAL_REPO_ID );
     }
 
@@ -545,8 +507,12 @@ public class MavenEmbedder
 
         ArtifactRepositoryPolicy releasesPolicy = new ArtifactRepositoryPolicy( true, updatePolicyFlag, checksumPolicyFlag );
 
-        //return artifactRepositoryFactory.createArtifactRepository( repositoryId, url, defaultArtifactRepositoryLayout, snapshotsPolicy, releasesPolicy );
-        return null;
+        RepositorySystem repositorySystem = lookup( RepositorySystem.class );
+        
+        ArtifactRepositoryLayout repositoryLayout = lookup( ArtifactRepositoryLayout.class, "default" );
+        
+        return repositorySystem.createArtifactRepository( repositoryId, url, repositoryLayout, snapshotsPolicy, releasesPolicy );
+        
     }
 
     // ----------------------------------------------------------------------

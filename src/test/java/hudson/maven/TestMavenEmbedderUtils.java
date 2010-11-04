@@ -16,7 +16,6 @@ public class TestMavenEmbedderUtils
     
     public void testMavenVersion() throws Exception
     {
-        
         String version = MavenEmbedderUtils.getMavenVersion( new File( System.getProperty( "maven.home" ) ));
         
         System.out.println("maven version " + version );
