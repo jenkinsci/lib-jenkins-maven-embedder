@@ -161,7 +161,7 @@ public class MavenEmbedder
     }
     
     public MavenEmbedder( ClassLoader mavenClassLoader, MavenRequest mavenRequest )
-    throws MavenEmbedderException
+        throws MavenEmbedderException
     {
         this(mavenClassLoader, null, mavenRequest);
     }
@@ -180,7 +180,8 @@ public class MavenEmbedder
         }
     }
     
-    private void buildMavenExecutionRequest() throws MavenEmbedderException, ComponentLookupException
+    private void buildMavenExecutionRequest()
+        throws MavenEmbedderException, ComponentLookupException
     {
         this.mavenExecutionRequest = new DefaultMavenExecutionRequest();
 
@@ -192,30 +193,31 @@ public class MavenEmbedder
         if ( this.mavenExecutionRequest.getUserSettingsFile() != null )
         {
             this.mavenExecutionRequest.setUserSettingsFile( new File( mavenRequest.getUserSettingsFile() ) );
-        }  
+        }
 
         try
         {
-            lookup( MavenExecutionRequestPopulator.class ).populateFromSettings( this.mavenExecutionRequest, getSettings() );
+            lookup( MavenExecutionRequestPopulator.class ).populateFromSettings( this.mavenExecutionRequest,
+                                                                                 getSettings() );
         }
         catch ( MavenExecutionRequestPopulationException e )
         {
             throw new MavenEmbedderException( e.getMessage(), e );
-        }        
-        
-        ArtifactRepository localRepository = getLocalRepository();
-        this.mavenExecutionRequest.setLocalRepository(localRepository);
-        this.mavenExecutionRequest.setLocalRepositoryPath(localRepository.getBasedir());
-        this.mavenExecutionRequest.setOffline(this.mavenExecutionRequest.isOffline());        
-        
-        this.mavenExecutionRequest.setUpdateSnapshots( this.mavenRequest.isUpdateSnapshots() );
-        
-        // TODO check null and create a console one ?
-        this.mavenExecutionRequest.setTransferListener(this.mavenRequest.getTransferListener());
+        }
 
-        this.mavenExecutionRequest.setCacheNotFound(this.mavenRequest.isCacheNotFound());
-        this.mavenExecutionRequest.setCacheTransferError(true);
-        
+        ArtifactRepository localRepository = getLocalRepository();
+        this.mavenExecutionRequest.setLocalRepository( localRepository );
+        this.mavenExecutionRequest.setLocalRepositoryPath( localRepository.getBasedir() );
+        this.mavenExecutionRequest.setOffline( this.mavenExecutionRequest.isOffline() );
+
+        this.mavenExecutionRequest.setUpdateSnapshots( this.mavenRequest.isUpdateSnapshots() );
+
+        // TODO check null and create a console one ?
+        this.mavenExecutionRequest.setTransferListener( this.mavenRequest.getTransferListener() );
+
+        this.mavenExecutionRequest.setCacheNotFound( this.mavenRequest.isCacheNotFound() );
+        this.mavenExecutionRequest.setCacheTransferError( true );
+
         this.mavenExecutionRequest.setUserProperties( this.mavenRequest.getUserProperties() );
         this.mavenExecutionRequest.getSystemProperties().putAll( System.getProperties() );
         if ( this.mavenRequest.getSystemProperties() != null )
@@ -223,33 +225,37 @@ public class MavenEmbedder
             this.mavenExecutionRequest.getSystemProperties().putAll( this.mavenRequest.getSystemProperties() );
         }
         this.mavenExecutionRequest.getSystemProperties().putAll( getEnvVars() );
-        
-        
-        if (this.mavenHome != null)
+
+        if ( this.mavenHome != null )
         {
             this.mavenExecutionRequest.getSystemProperties().put( "maven.home", this.mavenHome.getAbsolutePath() );
         }
         this.mavenExecutionRequest.setActiveProfiles( this.mavenRequest.getProfiles() );
         //this.mavenExecutionRequest.setProfiles( this.mavenRequest.getProfiles() );
-        
+
         // FIXME
         this.mavenExecutionRequest.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );
-        
+
         // FIXME
         lookup( Logger.class ).setThreshold( 0 );
-                
-        
+
         this.mavenExecutionRequest.setExecutionListener( this.mavenRequest.getExecutionListener() )
-        .setInteractiveMode( this.mavenRequest.isInteractive() )
-        .setGlobalChecksumPolicy( this.mavenRequest.getGlobalChecksumPolicy() )
-        .setGoals( this.mavenRequest.getGoals() );
-        
-        if (this.mavenRequest.getPom() != null)
+            .setInteractiveMode( this.mavenRequest.isInteractive() )
+            .setGlobalChecksumPolicy( this.mavenRequest.getGlobalChecksumPolicy() )
+            .setGoals( this.mavenRequest.getGoals() );
+
+        if ( this.mavenRequest.getPom() != null )
         {
-            this.mavenExecutionRequest.setPom( new File(this.mavenRequest.getPom() ) );
+            this.mavenExecutionRequest.setPom( new File( this.mavenRequest.getPom() ) );
         }
-        // FIXME inactive profiles 
         
+        if (this.mavenRequest.getWorkspaceReader() != null)
+        {
+            this.mavenExecutionRequest.setWorkspaceReader( this.mavenRequest.getWorkspaceReader() );
+        }
+        
+        // FIXME inactive profiles 
+
         //this.mavenExecutionRequest.set
     }
     
@@ -369,7 +375,9 @@ public class MavenEmbedder
         try
         {
             ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
-            ProjectBuildingResult projectBuildingResult = projectBuilder.build( mavenProject, this.mavenExecutionRequest.getProjectBuildingRequest() );
+            ProjectBuildingResult projectBuildingResult = projectBuilder.build( mavenProject,
+                                                                                this.mavenExecutionRequest
+                                                                                    .getProjectBuildingRequest() );
             return projectBuildingResult.getProject();
         } catch(ComponentLookupException e)
         {
