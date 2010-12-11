@@ -26,14 +26,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.artifact.ArtifactUtils;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.aether.impl.VersionResolver;
-import org.sonatype.aether.resolution.VersionRangeRequest;
 
 
 
@@ -50,8 +46,11 @@ public class TestMavenEmbedderSimpleProject
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
 
+        mavenRequest.setLocalRepositoryPath( "./target/repo-maven" );
+        
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
-        MavenEmbedder mavenEmbedder = new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
+        MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
+            //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module/pom.xml" ) );
         System.out.println("artficatId " + project.getArtifactId());

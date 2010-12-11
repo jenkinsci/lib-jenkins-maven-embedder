@@ -21,9 +21,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.maven.Maven;
@@ -47,8 +49,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.repository.RepositorySystem;
+import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
@@ -71,6 +75,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.sonatype.aether.repository.LocalRepository;
 
 
 /**
@@ -166,15 +171,16 @@ public class MavenEmbedder
         this(mavenClassLoader, null, mavenRequest);
     }
     
-    private PlexusContainer buildPlexusContainer(ContainerConfiguration containerConfiguration) 
+    private PlexusContainer buildPlexusContainer( ContainerConfiguration containerConfiguration )
         throws MavenEmbedderException
     {
         try
         {
-        DefaultPlexusContainer plexusContainer = new DefaultPlexusContainer( containerConfiguration );
-        plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
-        return plexusContainer;
-        } catch (PlexusContainerException e)
+            DefaultPlexusContainer plexusContainer = new DefaultPlexusContainer( containerConfiguration );
+            plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
+            return plexusContainer;
+        }
+        catch ( PlexusContainerException e )
         {
             throw new MavenEmbedderException( e.getMessage(), e );
         }
@@ -375,9 +381,19 @@ public class MavenEmbedder
         try
         {
             ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
-            ProjectBuildingResult projectBuildingResult = projectBuilder.build( mavenProject,
-                                                                                this.mavenExecutionRequest
-                                                                                    .getProjectBuildingRequest() );
+            ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
+            MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+            session.setTransferListener( this.mavenRequest.getTransferListener() );
+            session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
+            session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
+            
+            org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
+            LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
+            session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
+            
+            projectBuildingRequest.setRepositorySession( session );
+
+            ProjectBuildingResult projectBuildingResult = projectBuilder.build( mavenProject,projectBuildingRequest );
             return projectBuildingResult.getProject();
         } catch(ComponentLookupException e)
         {
@@ -610,5 +626,19 @@ public class MavenEmbedder
         throws ComponentLookupException
     {
         return plexusContainer.lookup( role );
+    }
+    
+    private Map<String,String> propertiesToMap(Properties properties)
+    {
+        if ( properties == null || properties.isEmpty() )
+        {
+            return new HashMap<String, String>( 0 );
+        }
+        Map<String, String> result = new HashMap<String, String>( properties.size() );
+        for ( Entry<Object, Object> entry : properties.entrySet() )
+        {
+            result.put( (String) entry.getKey(), (String) entry.getValue() );
+        }
+        return result;
     }
 }

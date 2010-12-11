@@ -183,6 +183,7 @@ public class MavenRequest
         if (this.systemProperties == null)
         {
             this.systemProperties = new Properties();
+            this.systemProperties.putAll( System.getProperties() );
         }
         return systemProperties;
     }
