@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.InvalidRepositoryException;
@@ -38,13 +39,16 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
+import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionRequestPopulationException;
 import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
@@ -75,6 +79,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.LocalRepository;
 
 
@@ -94,52 +99,68 @@ public class MavenEmbedder
 
 
 
-    private File mavenHome;
+    private final File mavenHome;
     
-    private PlexusContainer plexusContainer;
+    private final PlexusContainer plexusContainer;
     
-    private MavenRequest mavenRequest;
+    private final MavenRequest mavenRequest;
     
     private MavenExecutionRequest mavenExecutionRequest;
+    private final MavenSession mavenSession;
 
-    public MavenEmbedder( File mavenHome, MavenRequest mavenRequest )
+    public MavenEmbedder( File mavenHome, MavenRequest mavenRequest ) throws MavenEmbedderException {
+        this(mavenHome,mavenRequest,buildPlexusContainer(mavenHome, mavenRequest));
+    }
+
+    public MavenEmbedder( ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest ) throws MavenEmbedderException {
+        this(null,mavenRequest,buildPlexusContainer(mavenClassLoader, parent, mavenRequest));
+    }
+
+    private MavenEmbedder( File mavenHome, MavenRequest mavenRequest, PlexusContainer plexusContainer )
         throws MavenEmbedderException
     {
         this.mavenHome = mavenHome;
         this.mavenRequest = mavenRequest;
+        this.plexusContainer = plexusContainer;
+
+        try {
+            this.buildMavenExecutionRequest();
+
+            RepositorySystemSession rss = ((DefaultMaven) lookup(Maven.class)).newRepositorySession(mavenExecutionRequest);
+            mavenSession = new MavenSession( plexusContainer, rss, mavenExecutionRequest, new DefaultMavenExecutionResult() );
+            lookup(LegacySupport.class).setSession(mavenSession);
+        } catch (MavenEmbedderException e) {
+            throw new MavenEmbedderException(e.getMessage(), e);
+        } catch (ComponentLookupException e) {
+            throw new MavenEmbedderException(e.getMessage(), e);
+        }
+    }
+
+
+    public MavenEmbedder( ClassLoader mavenClassLoader, MavenRequest mavenRequest )
+        throws MavenEmbedderException
+    {
+        this(mavenClassLoader, null, mavenRequest);
+    }
+
+    private static PlexusContainer buildPlexusContainer(File mavenHome, MavenRequest mavenRequest) throws MavenEmbedderException {
         ClassWorld world = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
 
         ClassRealm classRealm = MavenEmbedderUtils.buildClassRealm( mavenHome, world, Thread.currentThread().getContextClassLoader() );
-        
+
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
 
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() )
         .setRealm( classRealm ).setClassWorld( world );
-        
-        this.plexusContainer = buildPlexusContainer( conf );
-        
-        try
-        {
-            this.buildMavenExecutionRequest();
-        }
-        catch ( MavenEmbedderException e )
-        {
-            throw new MavenEmbedderException( e.getMessage(), e );
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new MavenEmbedderException( e.getMessage(), e );
-        }
+
+        return buildPlexusContainer(mavenRequest,conf);
     }
-    
-    public MavenEmbedder( ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest )
-        throws MavenEmbedderException
-    {
-        this.mavenRequest = mavenRequest;
+
+    private static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
 
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
-        
+
         ClassWorld classWorld = new ClassWorld();
 
         ClassRealm classRealm = new ClassRealm( classWorld, "maven", mavenClassLoader );
@@ -148,30 +169,10 @@ public class MavenEmbedder
                                                                    : parent ) );
         conf.setRealm( classRealm );
 
-        this.plexusContainer = buildPlexusContainer( conf );
-        
-        
-        try
-        {
-            this.buildMavenExecutionRequest();
-        }
-        catch ( MavenEmbedderException e )
-        {
-            throw new MavenEmbedderException( e.getMessage(), e );
-        }
-        catch ( ComponentLookupException e )
-        {
-            throw new MavenEmbedderException( e.getMessage(), e );
-        }
+        return buildPlexusContainer(mavenRequest,conf);
     }
-    
-    public MavenEmbedder( ClassLoader mavenClassLoader, MavenRequest mavenRequest )
-        throws MavenEmbedderException
-    {
-        this(mavenClassLoader, null, mavenRequest);
-    }
-    
-    private PlexusContainer buildPlexusContainer( ContainerConfiguration containerConfiguration )
+
+    private static PlexusContainer buildPlexusContainer(MavenRequest mavenRequest,ContainerConfiguration containerConfiguration )
         throws MavenEmbedderException
     {
         try
