@@ -46,6 +46,7 @@ import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Profile;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.plugin.LegacySupport;
@@ -237,8 +238,18 @@ public class MavenEmbedder
         {
             this.mavenExecutionRequest.getSystemProperties().put( "maven.home", this.mavenHome.getAbsolutePath() );
         }
-        this.mavenExecutionRequest.setActiveProfiles( this.mavenRequest.getProfiles() );
-        //this.mavenExecutionRequest.setProfiles( this.mavenRequest.getProfiles() );
+       
+        if (this.mavenRequest.getProfiles() != null && !this.mavenRequest.getProfiles().isEmpty())
+        {
+            for (String id : this.mavenRequest.getProfiles())
+            {
+                Profile p = new Profile();
+                p.setId( id );
+                p.setSource( "cli" );
+                this.mavenExecutionRequest.addProfile( p );
+                this.mavenExecutionRequest.addActiveProfile( id );
+            }
+        }
 
         // FIXME
         this.mavenExecutionRequest.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );

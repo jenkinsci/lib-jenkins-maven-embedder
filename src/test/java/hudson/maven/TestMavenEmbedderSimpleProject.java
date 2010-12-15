@@ -89,6 +89,21 @@ public class TestMavenEmbedderSimpleProject
         assertTrue(executedMojos.contains( "maven-clean-plugin" ));
         assertTrue(executedMojos.contains( "maven-surefire-plugin" ));
         
+    }  
+    
+    public void testEclipsePluginProjectRead() throws Exception
+    {
+        MavenRequest mavenRequest = new MavenRequest();
+        mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
+
+        mavenRequest.setLocalRepositoryPath( "./target/repo-maven" );
+        
+        mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
+        MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
+            //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
+        
+        MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ) );
+        System.out.println("artficatId " + project.getArtifactId());
     }    
     
 }
