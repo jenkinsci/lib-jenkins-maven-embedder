@@ -83,6 +83,8 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.LocalRepository;
 
+import com.google.inject.internal.util.Lists;
+
 
 /**
  * Class intended to be used by clients who wish to embed Maven into their applications
@@ -390,30 +392,42 @@ public class MavenEmbedder
     public MavenProject readProject( File mavenProject )
         throws ProjectBuildingException, MavenEmbedderException {
         
-        try
-        {
-            ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
-            ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
-            MavenRepositorySystemSession session = new MavenRepositorySystemSession();
-            session.setTransferListener( this.mavenRequest.getTransferListener() );
-            session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
-            session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
-            
-            org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
-            LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
-            session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
-            
-            projectBuildingRequest.setRepositorySession( session );
-
-            ProjectBuildingResult projectBuildingResult = projectBuilder.build( mavenProject,projectBuildingRequest );
-            return projectBuildingResult.getProject();
-        } catch(ComponentLookupException e)
-        {
-            throw new MavenEmbedderException(e.getMessage(), e);
-        }
+        List<MavenProject> projects = readProjects( mavenProject, false );
+        return projects == null || projects.isEmpty() ? null : projects.get( 0 );
         
     }
 
+    public List<MavenProject> readProjects( File mavenProject, boolean recursive )
+        throws ProjectBuildingException, MavenEmbedderException {
+    
+    try
+    {
+        ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
+        ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
+        MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+        session.setTransferListener( this.mavenRequest.getTransferListener() );
+        session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
+        session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
+        
+        org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
+        LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
+        session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
+        
+        projectBuildingRequest.setRepositorySession( session );
+
+        List<ProjectBuildingResult> results = projectBuilder.build( Lists.newArrayList(mavenProject), recursive, projectBuildingRequest );
+        
+        List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
+        for (ProjectBuildingResult result : results) {
+            projects.add( result.getProject() );
+        }
+        return projects;
+    } catch(ComponentLookupException e)
+    {
+        throw new MavenEmbedderException(e.getMessage(), e);
+    }
+    
+}    
 
     public List<MavenProject> collectProjects( File basedir, String[] includes, String[] excludes )
         throws MojoExecutionException, MavenEmbedderException {
