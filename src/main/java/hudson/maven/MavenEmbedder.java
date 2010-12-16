@@ -362,8 +362,9 @@ public class MavenEmbedder
 
     public List<MavenProject> readProjects( File mavenProject, boolean recursive )
         throws ProjectBuildingException, MavenEmbedderException {
-    
+    ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
     try {
+        Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
         ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
         ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
         MavenRepositorySystemSession session = new MavenRepositorySystemSession();
@@ -386,6 +387,8 @@ public class MavenEmbedder
         return projects;
     } catch(ComponentLookupException e) {
         throw new MavenEmbedderException(e.getMessage(), e);
+    } finally {
+        Thread.currentThread().setContextClassLoader( originalCl );
     }
     
 }    
