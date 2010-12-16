@@ -35,12 +35,9 @@ import org.apache.maven.project.MavenProject;
  * @author olamy
  *
  */
-public class TestMavenEmbedderSimpleProject
-    extends TestCase
-{
+public class TestMavenEmbedderSimpleProject extends TestCase {
 
-    public void testSimpleProjectRead() throws Exception
-    {
+    public void testSimpleProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
 
@@ -54,8 +51,7 @@ public class TestMavenEmbedderSimpleProject
         System.out.println("artficatId " + project.getArtifactId());
     }
     
-    public void testSimpleProjectBuild() throws Exception
-    {
+    public void testSimpleProjectBuild() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setUserSettingsFile( new File(System.getProperty( "user.home"), ".m2/settings.xml" ).getAbsolutePath() );
         mavenRequest.setLocalRepositoryPath( "target/local-repo" );
@@ -89,8 +85,7 @@ public class TestMavenEmbedderSimpleProject
         
     }  
     
-    public void testEclipsePluginProjectRead() throws Exception
-    {
+    public void testEclipsePluginProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
 
@@ -104,8 +99,7 @@ public class TestMavenEmbedderSimpleProject
         System.out.println("artficatId " + project.getArtifactId());
     } 
     
-    public void testEclipsePluginProjectReadMultiModule() throws Exception
-    {
+    public void testEclipsePluginProjectReadMultiModule() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ).getAbsolutePath() );
 

@@ -10,12 +10,9 @@ import junit.framework.TestCase;
  * @author Olivier Lamy
  *
  */
-public class TestMavenEmbedderUtils
-    extends TestCase
-{
+public class TestMavenEmbedderUtils extends TestCase {
     
-    public void testMavenVersion() throws Exception
-    {
+    public void testMavenVersion() throws Exception {
         String version = MavenEmbedderUtils.getMavenVersion( new File( System.getProperty( "maven.home" ) ));
         
         System.out.println("maven version " + version );
@@ -30,8 +27,7 @@ public class TestMavenEmbedderUtils
         assertTrue( current.compareTo(  new ComparableVersion( "3.0" ) ) >= 0 );
     }
 
-    public void testisAtLeastMavenVersion() throws Exception
-    {
+    public void testisAtLeastMavenVersion() throws Exception {
        assertTrue( MavenEmbedderUtils.isAtLeastMavenVersion( new File( System.getProperty( "maven.home" ) ), "3.0" ) );
        assertFalse( MavenEmbedderUtils.isAtLeastMavenVersion( new File( "src/test/maven-2.2.1" ), "3.0" ) );
     }     

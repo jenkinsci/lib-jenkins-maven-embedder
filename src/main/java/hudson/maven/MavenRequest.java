@@ -96,335 +96,274 @@ public class MavenRequest
      */
     private URL overridingComponentsXml;
     
-    public MavenRequest()
-    {
+    public MavenRequest() {
         // no op
     }
 
-    public String getGlobalSettingsFile()
-    {
+    public String getGlobalSettingsFile() {
         return globalSettingsFile;
     }
 
-    public MavenRequest setGlobalSettingsFile( String globalSettingsFile )
-    {
+    public MavenRequest setGlobalSettingsFile( String globalSettingsFile ) {
         this.globalSettingsFile = globalSettingsFile;
         return this;
     }
 
-    public String getUserSettingsFile()
-    {
+    public String getUserSettingsFile() {
         return userSettingsFile;
     }
 
-    public MavenRequest setUserSettingsFile( String userSettingsFile )
-    {
+    public MavenRequest setUserSettingsFile( String userSettingsFile ) {
         this.userSettingsFile = userSettingsFile;
         return this;
     }
 
-    public String getLocalRepositoryPath()
-    {
+    public String getLocalRepositoryPath() {
         return localRepositoryPath;
     }
 
-    public MavenRequest setLocalRepositoryPath( String localRepositoryPath )
-    {
+    public MavenRequest setLocalRepositoryPath( String localRepositoryPath ) {
         this.localRepositoryPath = localRepositoryPath;
         return this;
     }
 
-    public boolean isOffline()
-    {
+    public boolean isOffline() {
         return offline;
     }
 
-    public MavenRequest setOffline( boolean offline )
-    {
+    public MavenRequest setOffline( boolean offline ) {
         this.offline = offline;
         return this;
     }
 
-    public TransferListener getTransferListener()
-    {
+    public TransferListener getTransferListener() {
         return transferListener;
     }
 
-    public MavenRequest setTransferListener( TransferListener transferListener )
-    {
+    public MavenRequest setTransferListener( TransferListener transferListener ) {
         this.transferListener = transferListener;
         return this;
     }
 
-    public String getBaseDirectory()
-    {
+    public String getBaseDirectory() {
         return baseDirectory;
     }
 
-    public MavenRequest setBaseDirectory( String baseDirectory )
-    {
+    public MavenRequest setBaseDirectory( String baseDirectory ) {
         this.baseDirectory = baseDirectory;
         return this;
     }
 
-    public List<String> getGoals()
-    {
+    public List<String> getGoals() {
         return goals;
     }
 
-    public MavenRequest setGoals( List<String> goals )
-    {
+    public MavenRequest setGoals( List<String> goals ) {
         this.goals = goals;
         return this;
     }
 
-    public Properties getSystemProperties()
-    {
-        if (this.systemProperties == null)
-        {
+    public Properties getSystemProperties() {
+        if (this.systemProperties == null) {
             this.systemProperties = new Properties();
             this.systemProperties.putAll( System.getProperties() );
         }
         return systemProperties;
     }
 
-    public MavenRequest setSystemProperties( Properties systemProperties )
-    {
+    public MavenRequest setSystemProperties( Properties systemProperties ) {
         this.systemProperties = systemProperties;
         return this;
     }
 
-    public Properties getUserProperties()
-    {
-        if (this.userProperties == null)
-        {
+    public Properties getUserProperties() {
+        if (this.userProperties == null) {
             this.userProperties = new Properties();
         }        
         return userProperties;
     }
 
-    public MavenRequest setUserProperties( Properties userProperties )
-    {
+    public MavenRequest setUserProperties( Properties userProperties ) {
         this.userProperties = userProperties;
         return this;
     }
 
-    public String getFailureBehavior()
-    {
+    public String getFailureBehavior() {
         return failureBehavior;
     }
 
-    public MavenRequest setFailureBehavior( String failureBehavior )
-    {
+    public MavenRequest setFailureBehavior( String failureBehavior ) {
         this.failureBehavior = failureBehavior;
         return this;
     }
 
-    public List<String> getSelectedProjects()
-    {
+    public List<String> getSelectedProjects() {
         return selectedProjects;
     }
 
-    public MavenRequest setSelectedProjects( List<String> selectedProjects )
-    {
+    public MavenRequest setSelectedProjects( List<String> selectedProjects ) {
         this.selectedProjects = selectedProjects;
         return this;
     }
 
-    public String getResumeFromProject()
-    {
+    public String getResumeFromProject() {
         return resumeFromProject;
     }
 
-    public MavenRequest setResumeFromProject( String resumeFromProject )
-    {
+    public MavenRequest setResumeFromProject( String resumeFromProject ) {
         this.resumeFromProject = resumeFromProject;
         return this;
     }
 
-    public String getMakeBehavior()
-    {
+    public String getMakeBehavior() {
         return makeBehavior;
     }
 
-    public MavenRequest setMakeBehavior( String makeBehavior )
-    {
+    public MavenRequest setMakeBehavior( String makeBehavior ) {
         this.makeBehavior = makeBehavior;
         return this;
     }
 
-    public String getThreadCount()
-    {
+    public String getThreadCount() {
         return threadCount;
     }
 
-    public MavenRequest setThreadCount( String threadCount )
-    {
+    public MavenRequest setThreadCount( String threadCount ) {
         this.threadCount = threadCount;
         return this;
     }
 
-    public boolean isRecursive()
-    {
+    public boolean isRecursive() {
         return recursive;
     }
 
-    public MavenRequest setRecursive( boolean recursive )
-    {
+    public MavenRequest setRecursive( boolean recursive ) {
         this.recursive = recursive;
         return this;
     }
 
-    public String getPom()
-    {
+    public String getPom() {
         return pom;
     }
 
-    public MavenRequest setPom( String pom )
-    {
+    public MavenRequest setPom( String pom ) {
         this.pom = pom;
         return this;
     }
 
-    public boolean isShowErrors()
-    {
+    public boolean isShowErrors() {
         return showErrors;
     }
 
-    public MavenRequest setShowErrors( boolean showErrors )
-    {
+    public MavenRequest setShowErrors( boolean showErrors ) {
         this.showErrors = showErrors;
         return this;
     }
 
-    public int getLoggingLevel()
-    {
+    public int getLoggingLevel() {
         return loggingLevel;
     }
 
-    public MavenRequest setLoggingLevel( int loggingLevel )
-    {
+    public MavenRequest setLoggingLevel( int loggingLevel ) {
         this.loggingLevel = loggingLevel;
         return this;
     }
 
-    public boolean isUpdateSnapshots()
-    {
+    public boolean isUpdateSnapshots() {
         return updateSnapshots;
     }
 
-    public MavenRequest setUpdateSnapshots( boolean updateSnapshots )
-    {
+    public MavenRequest setUpdateSnapshots( boolean updateSnapshots ) {
         this.updateSnapshots = updateSnapshots;
         return this;
     }
 
-    public boolean isNoSnapshotUpdates()
-    {
+    public boolean isNoSnapshotUpdates() {
         return noSnapshotUpdates;
     }
 
-    public MavenRequest setNoSnapshotUpdates( boolean noSnapshotUpdates )
-    {
+    public MavenRequest setNoSnapshotUpdates( boolean noSnapshotUpdates ) {
         this.noSnapshotUpdates = noSnapshotUpdates;
         return this;
     }
 
-    public String getGlobalChecksumPolicy()
-    {
+    public String getGlobalChecksumPolicy() {
         return globalChecksumPolicy;
     }
 
-    public MavenRequest setGlobalChecksumPolicy( String globalChecksumPolicy )
-    {
+    public MavenRequest setGlobalChecksumPolicy( String globalChecksumPolicy ) {
         this.globalChecksumPolicy = globalChecksumPolicy;
         return this;
     }
 
-    public boolean isInteractive()
-    {
+    public boolean isInteractive() {
         return interactive;
     }
 
-    public MavenRequest setInteractive( boolean interactive )
-    {
+    public MavenRequest setInteractive( boolean interactive ) {
         this.interactive = interactive;
         return this;
     }
 
-    public boolean isCacheTransferError()
-    {
+    public boolean isCacheTransferError() {
         return cacheTransferError;
     }
 
-    public MavenRequest setCacheTransferError( boolean cacheTransferError )
-    {
+    public MavenRequest setCacheTransferError( boolean cacheTransferError ) {
         this.cacheTransferError = cacheTransferError;
         return this;
     }
 
-    public boolean isCacheNotFound()
-    {
+    public boolean isCacheNotFound() {
         return cacheNotFound;
     }
 
-    public MavenRequest setCacheNotFound( boolean cacheNotFound )
-    {
+    public MavenRequest setCacheNotFound( boolean cacheNotFound ) {
         this.cacheNotFound = cacheNotFound;
         return this;
     }
 
-    public List<String> getProfiles()
-    {
+    public List<String> getProfiles() {
         return profiles;
     }
 
-    public MavenRequest setProfiles( List<String> profiles )
-    {
+    public MavenRequest setProfiles( List<String> profiles ) {
         this.profiles = profiles;
         return this;
     }
 
-    public ExecutionListener getExecutionListener()
-    {
+    public ExecutionListener getExecutionListener() {
         return executionListener;
     }
 
-    public MavenRequest setExecutionListener( ExecutionListener executionListener )
-    {
+    public MavenRequest setExecutionListener( ExecutionListener executionListener ) {
         this.executionListener = executionListener;
         return this;
     }
 
-    public WorkspaceReader getWorkspaceReader()
-    {
+    public WorkspaceReader getWorkspaceReader() {
         return workspaceReader;
     }
 
-    public MavenRequest setWorkspaceReader( WorkspaceReader workspaceReader )
-    {
+    public MavenRequest setWorkspaceReader( WorkspaceReader workspaceReader ) {
         this.workspaceReader = workspaceReader;
         return this;
     }
 
-    public MavenLoggerManager getMavenLoggerManager()
-    {
+    public MavenLoggerManager getMavenLoggerManager() {
         return mavenLoggerManager;
     }
 
-    public MavenRequest setMavenLoggerManager( MavenLoggerManager mavenLoggerManager )
-    {
+    public MavenRequest setMavenLoggerManager( MavenLoggerManager mavenLoggerManager ) {
         this.mavenLoggerManager = mavenLoggerManager;
         return this;
     }
 
-    public URL getOverridingComponentsXml()
-    {
+    public URL getOverridingComponentsXml() {
         return overridingComponentsXml;
     }
 
-    public void setOverridingComponentsXml( URL overridingComponentsXml )
-    {
+    public void setOverridingComponentsXml( URL overridingComponentsXml ) {
         this.overridingComponentsXml = overridingComponentsXml;
     }
     

@@ -30,24 +30,21 @@ public class MavenEmbedderException
     /**
      * 
      */
-    public MavenEmbedderException()
-    {
+    public MavenEmbedderException() {
         // no op
     }
 
     /**
      * @param message
      */
-    public MavenEmbedderException( String message )
-    {
+    public MavenEmbedderException( String message ) {
         super( message );
     }
 
     /**
      * @param cause
      */
-    public MavenEmbedderException( Throwable cause )
-    {
+    public MavenEmbedderException( Throwable cause ) {
         super( cause );
     }
 
@@ -55,8 +52,7 @@ public class MavenEmbedderException
      * @param message
      * @param cause
      */
-    public MavenEmbedderException( String message, Throwable cause )
-    {
+    public MavenEmbedderException( String message, Throwable cause ) {
         super( message, cause );
     }
 
