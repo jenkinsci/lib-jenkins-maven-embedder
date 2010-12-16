@@ -1,0 +1,2 @@
+Try to use settings.xml from the user for various junits
+downloading tycho stuff is huge !!

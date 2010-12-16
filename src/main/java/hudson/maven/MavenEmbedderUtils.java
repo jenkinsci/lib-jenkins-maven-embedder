@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -37,6 +39,8 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  */
 public class MavenEmbedderUtils
 {
+    
+    private static final String POM_PROPERTIES_PATH = "META-INF/maven/org.apache.maven/maven-core/pom.properties";
     
     private MavenEmbedderUtils() {
         // no op only to prevent construction
@@ -109,10 +113,13 @@ public class MavenEmbedderUtils
     public static String getMavenVersion(File mavenHome) throws MavenEmbedderException {
         
         ClassRealm realm = buildClassRealm( mavenHome, null, null );
+        if (debug) {
+            debugMavenVersion(realm);
+        }
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader( realm );
-            InputStream inStream = realm.getResourceAsStream( "META-INF/maven/org.apache.maven/maven-core/pom.properties" );
+            InputStream inStream = realm.getResourceAsStream( POM_PROPERTIES_PATH );
             Properties properties = new Properties();
             properties.load( inStream );
             return properties.getProperty( "version" );
@@ -129,5 +136,19 @@ public class MavenEmbedderUtils
         ComparableVersion testedOne = new ComparableVersion( version );
         return found.compareTo( testedOne ) >= 0;
     }
+    
+    private static void debugMavenVersion(ClassRealm realm ) {
+        try {
+        Enumeration<URL> urls = realm.findResources( POM_PROPERTIES_PATH );
+        System.out.println("urls for " + POM_PROPERTIES_PATH );
+        while(urls.hasMoreElements()) {
+            System.out.println("url " + urls.nextElement().toExternalForm());
+        }
+        } catch (IOException e) {
+            System.out.println("Ignore IOException during searching " + POM_PROPERTIES_PATH + ":" + e.getMessage());
+        }
+    }
+    
+    public static boolean debug = Boolean.getBoolean( "hudson.maven.MavenEmbedderUtils.debug" );
 
 }

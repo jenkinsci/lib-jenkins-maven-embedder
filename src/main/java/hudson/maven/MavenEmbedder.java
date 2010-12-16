@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -82,8 +83,6 @@ import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.LocalRepository;
-
-import com.google.inject.internal.util.Lists;
 
 
 /**
@@ -377,8 +376,10 @@ public class MavenEmbedder
         session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
         
         projectBuildingRequest.setRepositorySession( session );
+        
+        projectBuildingRequest.setProcessPlugins( true );
 
-        List<ProjectBuildingResult> results = projectBuilder.build( Lists.newArrayList(mavenProject), recursive, projectBuildingRequest );
+        List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
         
         List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
         for (ProjectBuildingResult result : results) {
