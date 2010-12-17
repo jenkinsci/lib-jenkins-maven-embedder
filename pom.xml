@@ -111,6 +111,7 @@
           <systemPropertyVariables>
             <maven.home>${maven.home}</maven.home>
             <maven.version>${maven.version}</maven.version>
+            <localRepository>${settings.localRepository}</localRepository>
           </systemPropertyVariables>
         </configuration>
       </plugin>
