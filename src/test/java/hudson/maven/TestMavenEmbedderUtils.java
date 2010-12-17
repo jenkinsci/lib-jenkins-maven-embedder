@@ -13,8 +13,10 @@ import junit.framework.TestCase;
 public class TestMavenEmbedderUtils extends TestCase {
     
     public void testMavenVersion() throws Exception {
-        String version = MavenEmbedderUtils.getMavenVersion( new File( System.getProperty( "maven.home" ) ));
+        MavenInformation mavenInformation = MavenEmbedderUtils.getMavenVersion( new File( System.getProperty( "maven.home" ) ));
         
+        String version = mavenInformation.getVersion();
+        assertNotNull( mavenInformation.getVersionResourcePath() );
         System.out.println("maven version " + version );
         
         assertNotNull( version );

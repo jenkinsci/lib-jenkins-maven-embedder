@@ -1,19 +1,5 @@
 package hudson.maven;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Enumeration;
-import java.util.Properties;
-
-import org.apache.maven.artifact.versioning.ComparableVersion;
-import org.apache.tools.ant.AntClassLoader;
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,6 +18,22 @@ import org.codehaus.plexus.classworlds.realm.ClassRealm;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.Properties;
+
+import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.apache.tools.ant.AntClassLoader;
+import org.codehaus.plexus.classworlds.ClassWorld;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
+import org.codehaus.plexus.util.IOUtil;
+
 
 /**
  * @author Olivier Lamy
@@ -110,29 +112,32 @@ public class MavenEmbedderUtils
      * @return the maven version 
      * @throws MavenEmbedderException
      */
-    public static String getMavenVersion(File mavenHome) throws MavenEmbedderException {
+    public static MavenInformation getMavenVersion(File mavenHome) throws MavenEmbedderException {
         
         ClassRealm realm = buildClassRealm( mavenHome, null, null );
         if (debug) {
             debugMavenVersion(realm);
         }
         ClassLoader original = Thread.currentThread().getContextClassLoader();
+        InputStream inputStream = null;
         try {
             Thread.currentThread().setContextClassLoader( realm );
-            InputStream inStream = realm.getResourceAsStream( POM_PROPERTIES_PATH );
+            URL resource = realm.findResource( POM_PROPERTIES_PATH );
+            inputStream = resource.openStream();
             Properties properties = new Properties();
-            properties.load( inStream );
-            return properties.getProperty( "version" );
+            properties.load( inputStream );
+            return new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
         } catch ( IOException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
+            IOUtil.close( inputStream );
             Thread.currentThread().setContextClassLoader( original );
         }
         
     }
     
     public static boolean isAtLeastMavenVersion(File mavenHome, String version)  throws MavenEmbedderException {
-        ComparableVersion found = new ComparableVersion( getMavenVersion( mavenHome ) );
+        ComparableVersion found = new ComparableVersion( getMavenVersion( mavenHome ).getVersion() );
         ComparableVersion testedOne = new ComparableVersion( version );
         return found.compareTo( testedOne ) >= 0;
     }
