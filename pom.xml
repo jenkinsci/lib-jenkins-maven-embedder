@@ -13,6 +13,11 @@
     <maven>3.0</maven>
   </prerequisites>
   
+  <scm>
+    <connection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</connection>
+    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</developerConnection>
+  </scm>
+  
   <properties>
     <aetherVersion>1.8</aetherVersion>
     <mavenVersion>3.0.1</mavenVersion>
@@ -97,6 +102,19 @@
   </dependencies>
   
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.1</version>
+          <configuration>
+            <tagBase>https://svn.java.net/svn/hudson~svn/tags/</tagBase>
+            <goals>deploy</goals>
+          </configuration>  
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -106,7 +124,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.6</version>
+        <version>2.7</version>
         <configuration>
           <systemPropertyVariables>
             <maven.home>${maven.home}</maven.home>
@@ -144,6 +162,13 @@
       </plugin>    
     </plugins>
   </build>
+  
+  <distributionManagement>
+    <repository>
+      <id>java.net-m2-repository</id>
+      <url>http://maven.hudson-labs.org/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement>  
   
   <profiles>
     <profile>
