@@ -22,6 +22,7 @@
     <aetherVersion>1.8</aetherVersion>
     <mavenVersion>3.0.1</mavenVersion>
     <wagonVersion>1.0-beta-7</wagonVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <dependencies>
