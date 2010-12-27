@@ -111,11 +111,11 @@ public class MavenEmbedder
     private final MavenSession mavenSession;
 
     public MavenEmbedder( File mavenHome, MavenRequest mavenRequest ) throws MavenEmbedderException {
-        this(mavenHome,mavenRequest,buildPlexusContainer(mavenHome, mavenRequest));
+        this(mavenHome,mavenRequest,MavenEmbedderUtils.buildPlexusContainer(mavenHome, mavenRequest));
     }
 
     public MavenEmbedder( ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest ) throws MavenEmbedderException {
-        this(null,mavenRequest,buildPlexusContainer(mavenClassLoader, parent, mavenRequest));
+        this(null,mavenRequest,MavenEmbedderUtils.buildPlexusContainer(mavenClassLoader, parent, mavenRequest));
     }
 
     private MavenEmbedder( File mavenHome, MavenRequest mavenRequest, PlexusContainer plexusContainer )
@@ -143,46 +143,6 @@ public class MavenEmbedder
         this(mavenClassLoader, null, mavenRequest);
     }
 
-    private static PlexusContainer buildPlexusContainer(File mavenHome, MavenRequest mavenRequest) throws MavenEmbedderException {
-        ClassWorld world = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
-
-        ClassRealm classRealm = MavenEmbedderUtils.buildClassRealm( mavenHome, world, Thread.currentThread().getContextClassLoader() );
-
-        DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
-
-        conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() )
-        .setRealm( classRealm ).setClassWorld( world );
-
-        return buildPlexusContainer(mavenRequest,conf);
-    }
-
-    private static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
-        DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
-
-        conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
-
-        ClassWorld classWorld = new ClassWorld();
-
-        ClassRealm classRealm = new ClassRealm( classWorld, "maven", mavenClassLoader );
-        classRealm.setParentRealm( new ClassRealm( classWorld, "maven-parent",
-                                                   parent == null ? Thread.currentThread().getContextClassLoader()
-                                                                   : parent ) );
-        conf.setRealm( classRealm );
-
-        return buildPlexusContainer(mavenRequest,conf);
-    }
-
-    private static PlexusContainer buildPlexusContainer(MavenRequest mavenRequest,ContainerConfiguration containerConfiguration )
-        throws MavenEmbedderException {
-        try
-        {
-            DefaultPlexusContainer plexusContainer = new DefaultPlexusContainer( containerConfiguration );
-            plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
-            return plexusContainer;
-        } catch ( PlexusContainerException e ) {
-            throw new MavenEmbedderException( e.getMessage(), e );
-        }
-    }
     
     private void buildMavenExecutionRequest()
         throws MavenEmbedderException, ComponentLookupException  {
@@ -361,38 +321,38 @@ public class MavenEmbedder
 
     public List<MavenProject> readProjects( File mavenProject, boolean recursive )
         throws ProjectBuildingException, MavenEmbedderException {
-    ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
-    try {
-        Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
-        ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
-        ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
-        MavenRepositorySystemSession session = new MavenRepositorySystemSession();
-        session.setTransferListener( this.mavenRequest.getTransferListener() );
-        session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
-        session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
-        
-        org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
-        LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
-        session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
-        
-        projectBuildingRequest.setRepositorySession( session );
-        
-        projectBuildingRequest.setProcessPlugins( true );
-
-        List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
-        
-        List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
-        for (ProjectBuildingResult result : results) {
-            projects.add( result.getProject() );
-        }
-        return projects;
-    } catch(ComponentLookupException e) {
-        throw new MavenEmbedderException(e.getMessage(), e);
-    } finally {
-        Thread.currentThread().setContextClassLoader( originalCl );
-    }
+        ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
+            ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
+            ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
+            MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+            session.setTransferListener( this.mavenRequest.getTransferListener() );
+            session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
+            session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
+            
+            org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
+            LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
+            session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
+            
+            projectBuildingRequest.setRepositorySession( session );
+            
+            projectBuildingRequest.setProcessPlugins( true );
     
-}    
+            List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
+            
+            List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
+            for (ProjectBuildingResult result : results) {
+                projects.add( result.getProject() );
+            }
+            return projects;
+        } catch(ComponentLookupException e) {
+            throw new MavenEmbedderException(e.getMessage(), e);
+        } finally {
+            Thread.currentThread().setContextClassLoader( originalCl );
+        }
+    
+    }    
 
     public List<MavenProject> collectProjects( File basedir, String[] includes, String[] excludes )
         throws MojoExecutionException, MavenEmbedderException {

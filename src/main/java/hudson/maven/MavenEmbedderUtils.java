@@ -30,6 +30,11 @@ import java.util.Properties;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tools.ant.AntClassLoader;
+import org.codehaus.plexus.ContainerConfiguration;
+import org.codehaus.plexus.DefaultContainerConfiguration;
+import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.IOUtil;
@@ -95,7 +100,7 @@ public class MavenEmbedderUtils
             world = new ClassWorld();
         }
         
-        ClassRealm classRealm = new ClassRealm( world, "maven", parentClassLoader == null ? antClassLoader : parentClassLoader );
+        ClassRealm classRealm = new ClassRealm( world, "plexus.core", parentClassLoader == null ? antClassLoader : parentClassLoader );
 
         for ( File jarFile : jarFiles ) {
             try {
@@ -106,6 +111,49 @@ public class MavenEmbedderUtils
         }
         return classRealm;
     }
+    
+    public static PlexusContainer buildPlexusContainer(File mavenHome, MavenRequest mavenRequest) throws MavenEmbedderException {
+        ClassWorld world = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
+
+        ClassRealm classRealm = MavenEmbedderUtils.buildClassRealm( mavenHome, world, Thread.currentThread().getContextClassLoader() );
+
+        DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
+
+        conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() )
+        .setRealm( classRealm ).setClassWorld( world );
+
+        return buildPlexusContainer(mavenRequest,conf);
+    }
+
+    public static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
+        DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
+
+        conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
+
+        ClassWorld classWorld = new ClassWorld();
+
+        ClassRealm classRealm = new ClassRealm( classWorld, "maven", mavenClassLoader );
+        classRealm.setParentRealm( new ClassRealm( classWorld, "maven-parent",
+                                                   parent == null ? Thread.currentThread().getContextClassLoader()
+                                                                   : parent ) );
+        conf.setRealm( classRealm );
+
+        return buildPlexusContainer(mavenRequest,conf);
+    }
+
+    private static PlexusContainer buildPlexusContainer(MavenRequest mavenRequest,ContainerConfiguration containerConfiguration )
+        throws MavenEmbedderException {
+        try
+        {
+            DefaultPlexusContainer plexusContainer = new DefaultPlexusContainer( containerConfiguration );
+            plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
+            return plexusContainer;
+        } catch ( PlexusContainerException e ) {
+            throw new MavenEmbedderException( e.getMessage(), e );
+        }
+    }
+        
+    
     
     /**
      * @param mavenHome
