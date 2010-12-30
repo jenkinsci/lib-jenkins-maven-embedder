@@ -113,6 +113,8 @@
           <configuration>
             <tagBase>https://svn.java.net/svn/hudson~svn/tags/</tagBase>
             <goals>deploy</goals>
+            <useReleaseProfile>false</useReleaseProfile>
+            <arguments>-Phudson-release</arguments>
           </configuration>  
         </plugin>
       </plugins>
@@ -203,6 +205,41 @@
         </plugins>
       </build>
     </profile>  
+    
+    <profile>
+      <id>hudson-release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.1.2</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.7</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>        
+        </plugins>
+      </build>
+    </profile>
+    
   </profiles>
   
 </project>
