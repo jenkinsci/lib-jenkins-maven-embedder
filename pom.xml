@@ -7,16 +7,16 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>hudson-maven-embedder</artifactId>
   <name>Hudson Maven Embedder</name>
-  <version>3.1</version>
+  <version>3.2-SNAPSHOT</version>
   
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
   
   <scm>
-    <connection>scm:svn:https://svn.java.net/svn/hudson~svn/tags/hudson-maven-embedder-3.1</connection>
-    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/tags/hudson-maven-embedder-3.1</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/hudson-maven-embedder-3.1</url>
+    <connection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</connection>
+    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/lib/hudson-maven-embedder</url>
   </scm>
   
   <properties>
