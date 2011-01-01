@@ -39,6 +39,7 @@ import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.cli.MavenCli;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -58,7 +59,6 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.repository.RepositorySystem;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
@@ -68,13 +68,7 @@ import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
-import org.codehaus.plexus.ContainerConfiguration;
-import org.codehaus.plexus.DefaultContainerConfiguration;
-import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.PlexusContainerException;
-import org.codehaus.plexus.classworlds.ClassWorld;
-import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.repository.exception.ComponentLifecycleException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.logging.Logger;
@@ -82,7 +76,6 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.repository.LocalRepository;
 
 
 /**
@@ -129,7 +122,9 @@ public class MavenEmbedder
             this.buildMavenExecutionRequest();
 
             RepositorySystemSession rss = ((DefaultMaven) lookup(Maven.class)).newRepositorySession(mavenExecutionRequest);
+            
             mavenSession = new MavenSession( plexusContainer, rss, mavenExecutionRequest, new DefaultMavenExecutionResult() );
+                        
             lookup(LegacySupport.class).setSession(mavenSession);
         } catch (MavenEmbedderException e) {
             throw new MavenEmbedderException(e.getMessage(), e);
@@ -159,6 +154,8 @@ public class MavenEmbedder
         try {
             lookup( MavenExecutionRequestPopulator.class ).populateFromSettings( this.mavenExecutionRequest,
                                                                                  getSettings() );
+            
+            lookup( MavenExecutionRequestPopulator.class ).populateDefaults( mavenExecutionRequest );
         } catch ( MavenExecutionRequestPopulationException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         }
@@ -219,6 +216,9 @@ public class MavenEmbedder
         // FIXME inactive profiles 
 
         //this.mavenExecutionRequest.set
+        
+        
+        
     }
     
     
@@ -240,9 +240,13 @@ public class MavenEmbedder
         SettingsBuildingRequest settingsBuildingRequest = new DefaultSettingsBuildingRequest();
         if ( this.mavenRequest.getGlobalSettingsFile() != null ) {
             settingsBuildingRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
+        } else {
+            settingsBuildingRequest.setGlobalSettingsFile( MavenCli.DEFAULT_GLOBAL_SETTINGS_FILE );
         }
         if ( this.mavenRequest.getUserSettingsFile() != null ) {
             settingsBuildingRequest.setUserSettingsFile( new File( this.mavenRequest.getUserSettingsFile() ) );
+        } else {
+            settingsBuildingRequest.setUserSettingsFile( MavenCli.DEFAULT_USER_SETTINGS_FILE );
         }
         
         settingsBuildingRequest.setUserProperties( this.mavenRequest.getUserProperties() );
@@ -282,7 +286,7 @@ public class MavenEmbedder
             // ignore
         }
 
-        if (path == null && this.mavenRequest.getLocalRepositoryPath() != null) {
+        if ( this.mavenRequest.getLocalRepositoryPath() != null ) {
             path =  this.mavenRequest.getLocalRepositoryPath();
         }        
         
@@ -326,18 +330,14 @@ public class MavenEmbedder
             Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
             ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
             ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
-            MavenRepositorySystemSession session = new MavenRepositorySystemSession();
-            session.setTransferListener( this.mavenRequest.getTransferListener() );
-            session.setUserProperties( propertiesToMap( this.mavenRequest.getUserProperties() ) );
-            session.setSystemProperties( propertiesToMap( this.mavenRequest.getSystemProperties() ) );
-            
-            org.sonatype.aether.RepositorySystem repoSystem = lookup( org.sonatype.aether.RepositorySystem.class );
-            LocalRepository localRepository = new LocalRepository( getLocalRepositoryPath() );
-            session.setLocalRepositoryManager( repoSystem.newLocalRepositoryManager( localRepository ) );
-            
-            projectBuildingRequest.setRepositorySession( session );
-            
+                  
+            RepositorySystemSession repositorySystemSession = buildRepositorySystemSession();
+           
+            projectBuildingRequest.setRepositorySession( repositorySystemSession );
+                        
             projectBuildingRequest.setProcessPlugins( true );
+            
+            projectBuildingRequest.setResolveDependencies( true );
     
             List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
             
@@ -352,7 +352,12 @@ public class MavenEmbedder
             Thread.currentThread().setContextClassLoader( originalCl );
         }
     
-    }    
+    }   
+    
+    private RepositorySystemSession buildRepositorySystemSession() throws ComponentLookupException {
+        DefaultMaven defaultMaven = (DefaultMaven) plexusContainer.lookup( Maven.class );
+        return defaultMaven.newRepositorySession( mavenExecutionRequest );
+    }
 
     public List<MavenProject> collectProjects( File basedir, String[] includes, String[] excludes )
         throws MojoExecutionException, MavenEmbedderException {

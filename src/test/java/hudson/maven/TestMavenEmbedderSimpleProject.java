@@ -57,6 +57,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
         mavenRequest.setGoals( Arrays.asList( "clean", "test" ) );
+        mavenRequest.getUserProperties().put( "failIfNoTests", "false" );
 
         final List<String> executedMojos = new ArrayList<String>();
         
@@ -86,7 +87,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
     }  
     
     // currently ignore those tests as they look to failed in http://ci.hudson-labs.org/
-    public void atestEclipsePluginProjectRead() throws Exception {
+    public void testEclipsePluginProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
         
@@ -100,7 +101,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         System.out.println("artficatId " + project.getArtifactId());
     } 
     
-    public void atestEclipsePluginProjectReadMultiModule() throws Exception {
+    public void testEclipsePluginProjectReadMultiModule() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ).getAbsolutePath() );
 
@@ -113,5 +114,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         List<MavenProject> projects = mavenEmbedder.readProjects( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ), true );
         assertEquals( "not 2 projects", 2, projects.size() );
     }     
+
+    
     
 }

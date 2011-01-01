@@ -146,7 +146,12 @@ public class MavenEmbedderUtils
         try
         {
             DefaultPlexusContainer plexusContainer = new DefaultPlexusContainer( containerConfiguration );
-            plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
+            if (mavenRequest.getMavenLoggerManager() != null) {
+                plexusContainer.setLoggerManager( mavenRequest.getMavenLoggerManager() );
+            }
+            if (mavenRequest.getLoggingLevel() > 0) {
+                plexusContainer.getLoggerManager().setThreshold( mavenRequest.getLoggingLevel() );
+            }
             return plexusContainer;
         } catch ( PlexusContainerException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
