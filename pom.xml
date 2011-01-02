@@ -9,11 +9,9 @@
   <name>Hudson Maven Embedder</name>
   <version>3.2-SNAPSHOT</version>
   
-  <!-- 
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
-   -->
    
   <scm>
     <connection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</connection>
