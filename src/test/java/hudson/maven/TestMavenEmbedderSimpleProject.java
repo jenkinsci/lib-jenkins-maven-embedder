@@ -29,7 +29,9 @@ import junit.framework.TestCase;
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenExecutionResult;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingException;
 
 /**
  * @author olamy
@@ -116,5 +118,36 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
     }     
 
     
+    public void testWrongScopeWithMaven2() throws Exception {
+        MavenRequest mavenRequest = new MavenRequest();
+        mavenRequest.setPom( new File( "src/test/projects-tests/test-pom-8395.xml" ).getAbsolutePath() );
+
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        
+        mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
+        MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
+            //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
+        
+        mavenEmbedder.readProjects( new File( "src/test/projects-tests/test-pom-8395.xml" ), true );
+        
+    } 
+    
+    public void testWrongScopeWithMaven3() throws Exception {
+        MavenRequest mavenRequest = new MavenRequest();
+        mavenRequest.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_3_0 );
+        mavenRequest.setPom( new File( "src/test/projects-tests/test-pom-8395.xml" ).getAbsolutePath() );
+
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        
+        mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
+        MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
+            //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
+        try  {
+            mavenEmbedder.readProjects( new File( "src/test/projects-tests/test-pom-8395.xml" ), true );
+            fail("not in ProjectBuildingException");
+        } catch (ProjectBuildingException e) {
+            // we need to pass here !
+        }
+    }     
     
 }

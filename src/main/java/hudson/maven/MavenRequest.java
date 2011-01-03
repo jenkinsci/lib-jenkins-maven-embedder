@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import org.apache.maven.cli.MavenLoggerManager;
 import org.apache.maven.execution.ExecutionListener;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.sonatype.aether.repository.WorkspaceReader;
 import org.sonatype.aether.transfer.TransferListener;
 
@@ -107,6 +108,13 @@ public class MavenRequest
      * @since 3.2
      */    
     private boolean resolveDependencies;
+    
+    /**
+     * level of validation when reading pom (ie model building request)
+     * default {@link ModelBuildingRequest#VALIDATION_LEVEL_MAVEN_2_0} etc...
+     * @since 3.2
+     */    
+    private int validationLevel = ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0;
     
     public MavenRequest() {
         // no op
@@ -397,7 +405,15 @@ public class MavenRequest
         this.resolveDependencies = resolveDependencies;
         return this;
     }
-    
-    
-    
+
+    public int getValidationLevel()
+    {
+        return validationLevel;
+    }
+
+    public MavenRequest setValidationLevel( int validationLevel )
+    {
+        this.validationLevel = validationLevel;
+        return this;
+    }
 }

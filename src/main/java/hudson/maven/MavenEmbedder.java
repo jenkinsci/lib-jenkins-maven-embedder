@@ -331,6 +331,8 @@ public class MavenEmbedder
             ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
             ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
                   
+            projectBuildingRequest.setValidationLevel( this.mavenRequest.getValidationLevel() );
+            
             RepositorySystemSession repositorySystemSession = buildRepositorySystemSession();
            
             projectBuildingRequest.setRepositorySession( repositorySystemSession );
