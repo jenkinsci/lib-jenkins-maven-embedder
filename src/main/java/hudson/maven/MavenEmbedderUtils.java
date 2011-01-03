@@ -197,11 +197,12 @@ public class MavenEmbedderUtils
     
     private static void debugMavenVersion(ClassRealm realm ) {
         try {
-        Enumeration<URL> urls = realm.findResources( POM_PROPERTIES_PATH );
-        System.out.println("urls for " + POM_PROPERTIES_PATH );
-        while(urls.hasMoreElements()) {
-            System.out.println("url " + urls.nextElement().toExternalForm());
-        }
+            @SuppressWarnings("unchecked")
+            Enumeration<URL> urls = realm.findResources( POM_PROPERTIES_PATH );
+            System.out.println("urls for " + POM_PROPERTIES_PATH );
+            while(urls.hasMoreElements()) {
+                System.out.println("url " + urls.nextElement().toExternalForm());
+            }
         } catch (IOException e) {
             System.out.println("Ignore IOException during searching " + POM_PROPERTIES_PATH + ":" + e.getMessage());
         }
