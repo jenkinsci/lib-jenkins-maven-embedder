@@ -335,9 +335,9 @@ public class MavenEmbedder
            
             projectBuildingRequest.setRepositorySession( repositorySystemSession );
                         
-            projectBuildingRequest.setProcessPlugins( true );
+            projectBuildingRequest.setProcessPlugins( this.mavenRequest.isProcessPlugins() );
             
-            projectBuildingRequest.setResolveDependencies( true );
+            projectBuildingRequest.setResolveDependencies( this.mavenRequest.isResolveDependencies() );
     
             List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
             

@@ -96,6 +96,18 @@ public class MavenRequest
      */
     private URL overridingComponentsXml;
     
+    /**
+     * will processPlugins during project reading
+     * @since 3.2
+     */
+    private boolean processPlugins;
+    
+    /**
+     * will resolve dependencies during project reading
+     * @since 3.2
+     */    
+    private boolean resolveDependencies;
+    
     public MavenRequest() {
         // no op
     }
@@ -363,8 +375,31 @@ public class MavenRequest
         return overridingComponentsXml;
     }
 
-    public void setOverridingComponentsXml( URL overridingComponentsXml ) {
+    public MavenRequest setOverridingComponentsXml( URL overridingComponentsXml ) {
         this.overridingComponentsXml = overridingComponentsXml;
+        return this;
+    }
+
+    public boolean isProcessPlugins()
+    {
+        return processPlugins;
+    }
+
+    public MavenRequest setProcessPlugins( boolean processPlugins )
+    {
+        this.processPlugins = processPlugins;
+        return this;
+    }
+
+    public boolean isResolveDependencies()
+    {
+        return resolveDependencies;
+    }
+
+    public MavenRequest setResolveDependencies( boolean resolveDependencies )
+    {
+        this.resolveDependencies = resolveDependencies;
+        return this;
     }
     
     
