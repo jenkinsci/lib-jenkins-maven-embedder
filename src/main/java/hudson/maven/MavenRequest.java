@@ -380,24 +380,20 @@ public class MavenRequest
         return this;
     }
 
-    public boolean isProcessPlugins()
-    {
+    public boolean isProcessPlugins() {
         return processPlugins;
     }
 
-    public MavenRequest setProcessPlugins( boolean processPlugins )
-    {
+    public MavenRequest setProcessPlugins( boolean processPlugins ) {
         this.processPlugins = processPlugins;
         return this;
     }
 
-    public boolean isResolveDependencies()
-    {
+    public boolean isResolveDependencies() {
         return resolveDependencies;
     }
 
-    public MavenRequest setResolveDependencies( boolean resolveDependencies )
-    {
+    public MavenRequest setResolveDependencies( boolean resolveDependencies ) {
         this.resolveDependencies = resolveDependencies;
         return this;
     }
