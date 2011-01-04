@@ -579,4 +579,9 @@ public class MavenEmbedder
         }
         return result;
     }
+
+    public MavenRequest getMavenRequest()
+    {
+        return mavenRequest;
+    }
 }
