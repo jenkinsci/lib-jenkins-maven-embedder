@@ -327,6 +327,22 @@ public class MavenEmbedder
         throws ProjectBuildingException, MavenEmbedderException {
         ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
         try {
+            List<ProjectBuildingResult> results = buildProjects( mavenProject, recursive );
+            List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
+            for (ProjectBuildingResult result : results) {
+                projects.add( result.getProject() );
+            }
+            return projects;
+        } finally {
+            Thread.currentThread().setContextClassLoader( originalCl );
+        }
+    
+    }   
+    
+    public List<ProjectBuildingResult> buildProjects( File mavenProject, boolean recursive )
+        throws ProjectBuildingException, MavenEmbedderException {
+        ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
+        try {
             Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
             ProjectBuilder projectBuilder = lookup( ProjectBuilder.class );
             ProjectBuildingRequest projectBuildingRequest = this.mavenExecutionRequest.getProjectBuildingRequest();
@@ -343,11 +359,7 @@ public class MavenEmbedder
     
             List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
             
-            List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
-            for (ProjectBuildingResult result : results) {
-                projects.add( result.getProject() );
-            }
-            return projects;
+            return results;
         } catch(ComponentLookupException e) {
             throw new MavenEmbedderException(e.getMessage(), e);
         } finally {
