@@ -38,7 +38,7 @@ public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
 
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module-with-parent/pom.xml" ).getAbsolutePath() );
 
-        String localRepoPath = System.getProperty( "localRepository" , ". /target/repo-maven" );
+        String localRepoPath = System.getProperty( "localRepository" , "./target/repo-maven" );
         
         System.out.println(" use localRepo path " + localRepoPath );
         

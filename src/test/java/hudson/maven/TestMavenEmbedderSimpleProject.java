@@ -43,7 +43,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
 
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
@@ -56,7 +56,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
     public void testSimpleProjectBuild() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setUserSettingsFile( new File(System.getProperty( "user.home"), ".m2/settings.xml" ).getAbsolutePath() );
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
         mavenRequest.setGoals( Arrays.asList( "clean", "test" ) );
         mavenRequest.getUserProperties().put( "failIfNoTests", "false" );
@@ -93,7 +93,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
         
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
@@ -107,7 +107,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ).getAbsolutePath() );
 
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
@@ -122,7 +122,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/test-pom-8395.xml" ).getAbsolutePath() );
 
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
@@ -137,7 +137,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         mavenRequest.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_3_0 );
         mavenRequest.setPom( new File( "src/test/projects-tests/test-pom-8395.xml" ).getAbsolutePath() );
 
-        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , ". /target/repo-maven" ) );
+        mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
         
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
