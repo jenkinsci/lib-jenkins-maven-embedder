@@ -5,7 +5,8 @@
     <version>1.7</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>hudson-maven-embedder</artifactId>
+  <groupId>org.jenkins-ci.lib</groupId>
+  <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Hudson Maven Embedder</name>
   <version>3.3-SNAPSHOT</version>
   
@@ -14,9 +15,9 @@
   </prerequisites>
    
   <scm>
-    <connection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</connection>
-    <developerConnection>scm:svn:https://svn.java.net/svn/hudson~svn/trunk/hudson/lib/hudson-maven-embedder</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/lib/hudson-maven-embedder</url>
+    <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/lib-jenkins-maven-embedder.git</developerConnection>
+    <url>https://github.com/jenkinsci/lib-jenkins-maven-embedder</url>
   </scm>
   
   <properties>
