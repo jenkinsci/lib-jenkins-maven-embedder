@@ -144,7 +144,7 @@ public class MavenEmbedder
         this.mavenExecutionRequest = new DefaultMavenExecutionRequest();
 
         if ( this.mavenRequest.getGlobalSettingsFile() != null ) {
-            this.mavenExecutionRequest.setGlobalSettingsFile( this.mavenExecutionRequest.getGlobalSettingsFile() );
+            this.mavenExecutionRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
         }
 
         if ( this.mavenExecutionRequest.getUserSettingsFile() != null ) {
