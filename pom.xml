@@ -8,7 +8,7 @@
   <groupId>org.jenkins-ci.lib</groupId>
   <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Jenkins Maven Embedder</name>
-  <version>3.3-SNAPSHOT</version>
+  <version>3.3</version>
   
   <prerequisites>
     <maven>3.0</maven>
