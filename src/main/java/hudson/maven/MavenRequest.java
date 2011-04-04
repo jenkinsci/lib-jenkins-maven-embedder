@@ -26,6 +26,7 @@ import java.util.Properties;
 import org.apache.maven.cli.MavenLoggerManager;
 import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.model.building.ModelBuildingRequest;
+import org.codehaus.plexus.PlexusConstants;
 import org.sonatype.aether.repository.WorkspaceReader;
 import org.sonatype.aether.transfer.TransferListener;
 
@@ -115,6 +116,21 @@ public class MavenRequest
      * @since 3.2
      */    
     private int validationLevel = ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0;
+    
+    /**
+     * @since 3.3
+     */
+    private boolean containerAutoWiring = false;
+
+    /**
+     * @since 3.3
+     */    
+    private String containerComponentVisibility = PlexusConstants.REALM_VISIBILITY;
+
+    /**
+     * @since 3.3
+     */    
+    private String containerClassPathScanning = PlexusConstants.SCANNING_OFF;    
     
     public MavenRequest() {
         // no op
@@ -416,4 +432,35 @@ public class MavenRequest
         this.validationLevel = validationLevel;
         return this;
     }
+
+    public boolean isContainerAutoWiring()
+    {
+        return containerAutoWiring;
+    }
+
+    public void setContainerAutoWiring( boolean containerAutoWiring )
+    {
+        this.containerAutoWiring = containerAutoWiring;
+    }
+
+    public String getContainerComponentVisibility()
+    {
+        return containerComponentVisibility;
+    }
+
+    public void setContainerComponentVisibility( String containerComponentVisibility )
+    {
+        this.containerComponentVisibility = containerComponentVisibility;
+    }
+
+    public String getContainerClassPathScanning()
+    {
+        return containerClassPathScanning;
+    }
+
+    public void setContainerClassPathScanning( String containerClassPathScanning )
+    {
+        this.containerClassPathScanning = containerClassPathScanning;
+    }
+
 }

@@ -1,6 +1,7 @@
 package hudson.maven;
 
 /*
+ * Olivier Lamy
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -125,9 +126,22 @@ public class MavenEmbedderUtils
         return buildPlexusContainer(mavenRequest,conf);
     }
 
+    /**
+     * used by PomParser in Jenkins
+     * @param mavenClassLoader
+     * @param parent
+     * @param mavenRequest
+     * @return
+     * @throws MavenEmbedderException
+     */
     public static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
-
+        
+        conf.setAutoWiring( mavenRequest.isContainerAutoWiring() );
+        conf.setClassPathScanning( mavenRequest.getContainerClassPathScanning() );
+        conf.setComponentVisibility( mavenRequest.getContainerComponentVisibility() );
+        
+        
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
 
         ClassWorld classWorld = new ClassWorld();
@@ -138,6 +152,8 @@ public class MavenEmbedderUtils
                                                                    : parent ) );
         conf.setRealm( classRealm );
 
+        conf.setClassWorld( classWorld );
+        
         return buildPlexusContainer(mavenRequest,conf);
     }
 
