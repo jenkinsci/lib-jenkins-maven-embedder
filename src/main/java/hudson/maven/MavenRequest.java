@@ -25,6 +25,7 @@ import java.util.Properties;
 
 import org.apache.maven.cli.MavenLoggerManager;
 import org.apache.maven.execution.ExecutionListener;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.codehaus.plexus.PlexusConstants;
 import org.sonatype.aether.repository.WorkspaceReader;
@@ -70,8 +71,11 @@ public class MavenRequest
     private String pom;
     
     private boolean showErrors;
-    
-    private int loggingLevel;
+
+    /**
+     * @see org.apache.maven.execution.MavenExecutionRequest
+     */
+    private int loggingLevel = MavenExecutionRequest.LOGGING_LEVEL_INFO;
     
     private boolean updateSnapshots;
     

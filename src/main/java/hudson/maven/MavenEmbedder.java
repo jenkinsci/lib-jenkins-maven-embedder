@@ -194,11 +194,10 @@ public class MavenEmbedder
             }
         }
 
-        // FIXME
-        mavenExecutionRequest.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );
 
-        // FIXME
-        lookup( Logger.class ).setThreshold( 0 );
+        mavenExecutionRequest.setLoggingLevel( mavenRequest.getLoggingLevel() );
+
+        lookup( Logger.class ).setThreshold( mavenRequest.getLoggingLevel() );
 
         mavenExecutionRequest.setExecutionListener( mavenRequest.getExecutionListener() )
             .setInteractiveMode( mavenRequest.isInteractive() )
