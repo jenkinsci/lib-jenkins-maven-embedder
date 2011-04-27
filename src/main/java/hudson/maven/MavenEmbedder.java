@@ -119,7 +119,7 @@ public class MavenEmbedder
         this.plexusContainer = plexusContainer;
 
         try {
-            this.buildMavenExecutionRequest();
+            this.mavenExecutionRequest = this.buildMavenExecutionRequest(mavenRequest);
 
             RepositorySystemSession rss = ((DefaultMaven) lookup(Maven.class)).newRepositorySession(mavenExecutionRequest);
             
@@ -139,20 +139,20 @@ public class MavenEmbedder
     }
 
     
-    private void buildMavenExecutionRequest()
+    private MavenExecutionRequest buildMavenExecutionRequest(MavenRequest mavenRequest)
         throws MavenEmbedderException, ComponentLookupException  {
-        this.mavenExecutionRequest = new DefaultMavenExecutionRequest();
+        MavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
 
-        if ( this.mavenRequest.getGlobalSettingsFile() != null ) {
-            this.mavenExecutionRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
+        if ( mavenRequest.getGlobalSettingsFile() != null ) {
+            mavenExecutionRequest.setGlobalSettingsFile( new File( mavenRequest.getGlobalSettingsFile() ) );
         }
 
-        if ( this.mavenExecutionRequest.getUserSettingsFile() != null ) {
-            this.mavenExecutionRequest.setUserSettingsFile( new File( mavenRequest.getUserSettingsFile() ) );
+        if ( mavenExecutionRequest.getUserSettingsFile() != null ) {
+            mavenExecutionRequest.setUserSettingsFile( new File( mavenRequest.getUserSettingsFile() ) );
         }
 
         try {
-            lookup( MavenExecutionRequestPopulator.class ).populateFromSettings( this.mavenExecutionRequest,
+            lookup( MavenExecutionRequestPopulator.class ).populateFromSettings( mavenExecutionRequest,
                                                                                  getSettings() );
             
             lookup( MavenExecutionRequestPopulator.class ).populateDefaults( mavenExecutionRequest );
@@ -161,63 +161,63 @@ public class MavenEmbedder
         }
 
         ArtifactRepository localRepository = getLocalRepository();
-        this.mavenExecutionRequest.setLocalRepository( localRepository );
-        this.mavenExecutionRequest.setLocalRepositoryPath( localRepository.getBasedir() );
-        this.mavenExecutionRequest.setOffline( this.mavenExecutionRequest.isOffline() );
+        mavenExecutionRequest.setLocalRepository( localRepository );
+        mavenExecutionRequest.setLocalRepositoryPath( localRepository.getBasedir() );
+        mavenExecutionRequest.setOffline( mavenRequest.isOffline() );
 
-        this.mavenExecutionRequest.setUpdateSnapshots( this.mavenRequest.isUpdateSnapshots() );
+        mavenExecutionRequest.setUpdateSnapshots( mavenRequest.isUpdateSnapshots() );
 
         // TODO check null and create a console one ?
-        this.mavenExecutionRequest.setTransferListener( this.mavenRequest.getTransferListener() );
+        mavenExecutionRequest.setTransferListener( mavenRequest.getTransferListener() );
 
-        this.mavenExecutionRequest.setCacheNotFound( this.mavenRequest.isCacheNotFound() );
-        this.mavenExecutionRequest.setCacheTransferError( true );
+        mavenExecutionRequest.setCacheNotFound( mavenRequest.isCacheNotFound() );
+        mavenExecutionRequest.setCacheTransferError( true );
 
-        this.mavenExecutionRequest.setUserProperties( this.mavenRequest.getUserProperties() );
-        this.mavenExecutionRequest.getSystemProperties().putAll( System.getProperties() );
-        if ( this.mavenRequest.getSystemProperties() != null ) {
-            this.mavenExecutionRequest.getSystemProperties().putAll( this.mavenRequest.getSystemProperties() );
+        mavenExecutionRequest.setUserProperties( mavenRequest.getUserProperties() );
+        mavenExecutionRequest.getSystemProperties().putAll( System.getProperties() );
+        if ( mavenRequest.getSystemProperties() != null ) {
+            mavenExecutionRequest.getSystemProperties().putAll( mavenRequest.getSystemProperties() );
         }
-        this.mavenExecutionRequest.getSystemProperties().putAll( getEnvVars() );
+        mavenExecutionRequest.getSystemProperties().putAll( getEnvVars() );
 
         if ( this.mavenHome != null ) {
-            this.mavenExecutionRequest.getSystemProperties().put( "maven.home", this.mavenHome.getAbsolutePath() );
+            mavenExecutionRequest.getSystemProperties().put( "maven.home", this.mavenHome.getAbsolutePath() );
         }
        
-        if (this.mavenRequest.getProfiles() != null && !this.mavenRequest.getProfiles().isEmpty()) {
-            for (String id : this.mavenRequest.getProfiles()) {
+        if (mavenRequest.getProfiles() != null && !mavenRequest.getProfiles().isEmpty()) {
+            for (String id : mavenRequest.getProfiles()) {
                 Profile p = new Profile();
                 p.setId( id );
                 p.setSource( "cli" );
-                this.mavenExecutionRequest.addProfile( p );
-                this.mavenExecutionRequest.addActiveProfile( id );
+                mavenExecutionRequest.addProfile( p );
+                mavenExecutionRequest.addActiveProfile( id );
             }
         }
 
         // FIXME
-        this.mavenExecutionRequest.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );
+        mavenExecutionRequest.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );
 
         // FIXME
         lookup( Logger.class ).setThreshold( 0 );
 
-        this.mavenExecutionRequest.setExecutionListener( this.mavenRequest.getExecutionListener() )
-            .setInteractiveMode( this.mavenRequest.isInteractive() )
-            .setGlobalChecksumPolicy( this.mavenRequest.getGlobalChecksumPolicy() )
-            .setGoals( this.mavenRequest.getGoals() );
+        mavenExecutionRequest.setExecutionListener( mavenRequest.getExecutionListener() )
+            .setInteractiveMode( mavenRequest.isInteractive() )
+            .setGlobalChecksumPolicy( mavenRequest.getGlobalChecksumPolicy() )
+            .setGoals( mavenRequest.getGoals() );
 
-        if ( this.mavenRequest.getPom() != null ) {
-            this.mavenExecutionRequest.setPom( new File( this.mavenRequest.getPom() ) );
+        if ( mavenRequest.getPom() != null ) {
+            mavenExecutionRequest.setPom( new File( mavenRequest.getPom() ) );
         }
         
-        if (this.mavenRequest.getWorkspaceReader() != null) {
-            this.mavenExecutionRequest.setWorkspaceReader( this.mavenRequest.getWorkspaceReader() );
+        if (mavenRequest.getWorkspaceReader() != null) {
+            mavenExecutionRequest.setWorkspaceReader( mavenRequest.getWorkspaceReader() );
         }
         
         // FIXME inactive profiles 
 
         //this.mavenExecutionRequest.set
         
-        
+        return  mavenExecutionRequest;
         
     }
     
@@ -430,13 +430,22 @@ public class MavenEmbedder
     // ----------------------------------------------------------------------
 
     public MavenExecutionResult execute( MavenRequest mavenRequest )
-        throws ComponentLookupException {
-        Maven maven = lookup( Maven.class );
+        throws MavenEmbedderException {
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         try {
+            Maven maven = lookup( Maven.class );
             Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
-            return maven.execute( mavenExecutionRequest );
-        } finally {
+            return maven.execute( buildMavenExecutionRequest( mavenRequest ) );
+        }
+        catch ( MavenEmbedderException e )
+        {
+            throw new MavenEmbedderException(e.getMessage(),e);
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new MavenEmbedderException(e.getMessage(),e);
+        }
+        finally {
             Thread.currentThread().setContextClassLoader( original );
         }
     }
