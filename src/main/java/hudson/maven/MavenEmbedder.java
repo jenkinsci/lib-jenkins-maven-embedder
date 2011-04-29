@@ -92,8 +92,6 @@ public class MavenEmbedder
 
     private MavenXpp3Writer modelWriter;
 
-
-
     private final File mavenHome;
     
     private final PlexusContainer plexusContainer;

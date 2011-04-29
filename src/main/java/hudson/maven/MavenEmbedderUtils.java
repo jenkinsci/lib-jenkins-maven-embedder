@@ -140,8 +140,7 @@ public class MavenEmbedderUtils
         conf.setAutoWiring( mavenRequest.isContainerAutoWiring() );
         conf.setClassPathScanning( mavenRequest.getContainerClassPathScanning() );
         conf.setComponentVisibility( mavenRequest.getContainerComponentVisibility() );
-        
-        
+
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
 
         ClassWorld classWorld = new ClassWorld();

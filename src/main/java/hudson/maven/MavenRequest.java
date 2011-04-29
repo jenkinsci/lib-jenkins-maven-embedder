@@ -28,6 +28,7 @@ import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.logging.LoggerManager;
 import org.sonatype.aether.repository.WorkspaceReader;
 import org.sonatype.aether.transfer.TransferListener;
 
@@ -95,7 +96,7 @@ public class MavenRequest
     
     private WorkspaceReader workspaceReader;
     
-    private MavenLoggerManager mavenLoggerManager;
+    private LoggerManager mavenLoggerManager;
     
     /**
      * plexus configuration override
@@ -390,11 +391,11 @@ public class MavenRequest
         return this;
     }
 
-    public MavenLoggerManager getMavenLoggerManager() {
+    public LoggerManager getMavenLoggerManager() {
         return mavenLoggerManager;
     }
 
-    public MavenRequest setMavenLoggerManager( MavenLoggerManager mavenLoggerManager ) {
+    public MavenRequest setMavenLoggerManager( LoggerManager mavenLoggerManager ) {
         this.mavenLoggerManager = mavenLoggerManager;
         return this;
     }
