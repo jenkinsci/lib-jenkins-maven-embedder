@@ -28,6 +28,22 @@ public class TestMavenEmbedderUtils extends TestCase {
         
         assertTrue( current.compareTo(  new ComparableVersion( "3.0" ) ) >= 0 );
     }
+    
+    public void testMavenVersion2_2_1() throws Exception {
+        MavenInformation mavenInformation = MavenEmbedderUtils.getMavenVersion( new File( "src/test/maven-2.2.1" ) );
+        assertNotNull( mavenInformation.getVersionResourcePath() );
+
+        assertEquals("2.2.1", mavenInformation.getVersion());
+    }
+    
+    public void testGetMavenVersionFromInvalidLocation() {
+        try {
+            MavenEmbedderUtils.getMavenVersion( new File(System.getProperty("java.home")));
+            fail("We should have gotten a MavenEmbedderException");
+        } catch (MavenEmbedderException e) {
+            // expected
+        }
+    }
 
     public void testisAtLeastMavenVersion() throws Exception {
        assertTrue( MavenEmbedderUtils.isAtLeastMavenVersion( new File( System.getProperty( "maven.home" ) ), "3.0" ) );

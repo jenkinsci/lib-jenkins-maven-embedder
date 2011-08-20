@@ -191,6 +191,10 @@ public class MavenEmbedderUtils
         try {
             Thread.currentThread().setContextClassLoader( realm );
             URL resource = realm.findResource( POM_PROPERTIES_PATH );
+            if (resource == null) {
+                throw new MavenEmbedderException("Couldn't find maven version information in " + mavenHome
+                        + ". Are you sure that this is a valid maven home?");
+            }
             inputStream = resource.openStream();
             Properties properties = new Properties();
             properties.load( inputStream );
