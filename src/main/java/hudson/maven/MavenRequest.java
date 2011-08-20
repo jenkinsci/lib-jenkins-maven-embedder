@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.cli.MavenLoggerManager;
 import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.building.ModelBuildingRequest;
