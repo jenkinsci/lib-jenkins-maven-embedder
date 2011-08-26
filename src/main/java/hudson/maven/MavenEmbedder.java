@@ -136,7 +136,11 @@ public class MavenEmbedder
         this(mavenClassLoader, null, mavenRequest);
     }
 
-    
+
+    public PlexusContainer getPlexusContainer() {
+        return plexusContainer;
+    }
+
     private MavenExecutionRequest buildMavenExecutionRequest(MavenRequest mavenRequest)
         throws MavenEmbedderException, ComponentLookupException  {
         MavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
@@ -245,7 +249,7 @@ public class MavenEmbedder
         } else {
             settingsBuildingRequest.setUserSettingsFile( MavenCli.DEFAULT_USER_SETTINGS_FILE );
         }
-        
+
         settingsBuildingRequest.setUserProperties( this.mavenRequest.getUserProperties() );
         settingsBuildingRequest.getSystemProperties().putAll( System.getProperties() );
         settingsBuildingRequest.getSystemProperties().putAll( this.mavenRequest.getSystemProperties() );
