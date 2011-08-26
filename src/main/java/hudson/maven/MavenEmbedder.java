@@ -93,7 +93,7 @@ public class MavenEmbedder
     private MavenXpp3Writer modelWriter;
 
     private final File mavenHome;
-    
+
     private final PlexusContainer plexusContainer;
     
     private final MavenRequest mavenRequest;
@@ -574,7 +574,15 @@ public class MavenEmbedder
     public Object lookup( String role ) throws ComponentLookupException {
         return plexusContainer.lookup( role );
     }
-    
+
+    public <T> void addComponent(T component, Class<?> role, String hint) {
+        plexusContainer.addComponent(component, role, hint);
+    }
+
+    public void addComponent(Object component, String role) {
+        plexusContainer.addComponent(component, role);
+    }
+
     private Map<String,String> propertiesToMap(Properties properties) {
         if ( properties == null || properties.isEmpty() ) {
             return new HashMap<String, String>( 0 );
