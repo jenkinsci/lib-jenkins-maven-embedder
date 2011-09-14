@@ -72,14 +72,14 @@ public class MavenEmbedderUtils
             throw new IllegalArgumentException( "mavenHome cannot be null" );
         }
         if ( !mavenHome.exists() ) {
-            throw new IllegalArgumentException( "mavenHome must exists" );
+            throw new IllegalArgumentException( "mavenHome '" + mavenHome.getPath() + "' doesn't seem to exist on this node (or you don't have sufficient rights to access it)" );
         }
 
         // list all jar under mavenHome/lib
 
         File libDirectory = new File( mavenHome, "lib" );
         if ( !libDirectory.exists() ) {
-            throw new IllegalArgumentException( mavenHome.getPath() + " without lib directory" );
+            throw new IllegalArgumentException( mavenHome.getPath() + " doesn't have a 'lib' subdirectory - thus cannot be a valid maven installation!" );
         }
 
         File[] jarFiles = libDirectory.listFiles( new FilenameFilter()
@@ -192,8 +192,8 @@ public class MavenEmbedderUtils
             Thread.currentThread().setContextClassLoader( realm );
             URL resource = realm.findResource( POM_PROPERTIES_PATH );
             if (resource == null) {
-                throw new MavenEmbedderException("Couldn't find maven version information in " + mavenHome
-                        + ". Are you sure that this is a valid maven home?");
+                throw new MavenEmbedderException("Couldn't find maven version information in '" + mavenHome.getPath()
+                        + "'. Are you sure that this is a valid maven home?");
             }
             inputStream = resource.openStream();
             Properties properties = new Properties();
