@@ -21,6 +21,7 @@ package hudson.maven;
 
 import java.io.File;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.maven.project.MavenProject;
@@ -56,7 +57,11 @@ public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module-with-parent/pom.xml" ) );
-        System.out.println("artficatId " + project.getArtifactId());
+        Assert.assertEquals("my-app", project.getArtifactId());
+        Assert.assertNotNull(project.getParent());
+        Assert.assertEquals("org.sonatype.oss", project.getParent().getGroupId());
+        Assert.assertEquals("oss-parent", project.getParent().getArtifactId());
+        Assert.assertEquals("5", project.getParent().getVersion());
     }
         
 }

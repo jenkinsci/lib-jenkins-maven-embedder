@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.maven.execution.AbstractExecutionListener;
@@ -50,7 +51,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module/pom.xml" ) );
-        System.out.println("artficatId " + project.getArtifactId());
+        Assert.assertEquals("my-app", project.getArtifactId());
     }
     
     public void testSimpleProjectBuild() throws Exception {
@@ -88,7 +89,6 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         
     }  
     
-    // currently ignore those tests as they look to failed in http://ci.hudson-labs.org/
     public void testEclipsePluginProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
@@ -100,7 +100,8 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ) );
-        System.out.println("artficatId " + project.getArtifactId());
+        Assert.assertEquals("my-app", project.getArtifactId());
+        Assert.assertEquals("eclipse-plugin", project.getPackaging());
     } 
     
     public void testEclipsePluginProjectReadMultiModule() throws Exception {
