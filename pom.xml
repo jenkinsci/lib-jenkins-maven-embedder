@@ -1,8 +1,8 @@
 <?xml version="1.0"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
-    <artifactId>lib</artifactId>
-    <groupId>org.jvnet.hudson</groupId>
-    <version>1.7</version>
+    <groupId>org.jenkins-ci</groupId>
+    <artifactId>jenkins</artifactId>
+    <version>1.24</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jenkins-ci.lib</groupId>
@@ -23,7 +23,7 @@
   <properties>
     <aetherVersion>1.11</aetherVersion>
     <mavenVersion>3.0.3</mavenVersion>
-    <wagonVersion>1.0</wagonVersion>
+    <wagonVersion>2.0</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -125,28 +125,28 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.1</version>
+      <version>1.6.2</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>0.9.28</version>
+      <version>0.9.30</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>0.9.28</version>
+      <version>0.9.30</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-access</artifactId>
-      <version>0.9.28</version>
+      <version>0.9.30</version>
       <scope>test</scope>
     </dependency>
       
@@ -215,6 +215,32 @@
       </plugin>    
     </plugins>
   </build>
+  
+  <repositories>
+    <repository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>m.g.o-public</id>
+      <url>http://maven.glassfish.org/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
   
   <distributionManagement>
     <repository>
