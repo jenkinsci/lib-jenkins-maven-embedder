@@ -141,7 +141,7 @@ public class MavenEmbedder
         return plexusContainer;
     }
 
-    private MavenExecutionRequest buildMavenExecutionRequest(MavenRequest mavenRequest)
+    protected MavenExecutionRequest buildMavenExecutionRequest(MavenRequest mavenRequest)
         throws MavenEmbedderException, ComponentLookupException  {
         MavenExecutionRequest mavenExecutionRequest = new DefaultMavenExecutionRequest();
 
