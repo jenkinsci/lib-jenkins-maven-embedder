@@ -22,7 +22,7 @@
   
   <properties>
     <!-- Work around maven 3.0.3 performance regression. See https://jira.codehaus.org/browse/MNG-5125 -->
-    <aetherVersion>1.12</aetherVersion>
+    <aetherVersion>1.13</aetherVersion>
     <mavenVersion>3.0.3</mavenVersion>
     <wagonVersion>2.0</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
