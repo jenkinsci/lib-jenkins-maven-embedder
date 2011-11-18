@@ -21,7 +21,8 @@
   </scm>
   
   <properties>
-    <aetherVersion>1.11</aetherVersion>
+    <!-- Work around maven 3.0.3 performance regression. See https://jira.codehaus.org/browse/MNG-5125 -->
+    <aetherVersion>1.12</aetherVersion>
     <mavenVersion>3.0.3</mavenVersion>
     <wagonVersion>2.0</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -151,6 +152,31 @@
     </dependency>
       
   </dependencies>
+  
+  <dependencyManagement>
+    <dependencies>
+        <dependency>
+          <groupId>org.sonatype.aether</groupId>
+          <artifactId>aether-api</artifactId>
+          <version>${aetherVersion}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.sonatype.aether</groupId>
+          <artifactId>aether-impl</artifactId>
+          <version>${aetherVersion}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.sonatype.aether</groupId>
+          <artifactId>aether-spi</artifactId>
+          <version>${aetherVersion}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.sonatype.aether</groupId>
+          <artifactId>aether-util</artifactId>
+          <version>${aetherVersion}</version>
+        </dependency>
+    </dependencies>
+  </dependencyManagement>
   
   <build>
      
