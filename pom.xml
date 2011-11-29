@@ -24,7 +24,7 @@
     <!-- Work around maven 3.0.3 performance regression. See https://jira.codehaus.org/browse/MNG-5125 -->
     <aetherVersion>1.13</aetherVersion>
     <mavenVersion>3.0.3</mavenVersion>
-    <wagonVersion>2.0</wagonVersion>
+    <wagonVersion>2.1</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -99,7 +99,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-http-lightweight</artifactId>
+      <artifactId>wagon-http</artifactId>
       <version>${wagonVersion}</version>
       <exclusions>
         <exclusion>
@@ -126,6 +126,13 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>1.6.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
       <version>1.6.2</version>
       <scope>test</scope>
     </dependency>
