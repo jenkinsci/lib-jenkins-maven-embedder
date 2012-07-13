@@ -45,6 +45,7 @@ under the License.
     <mavenVersion>3.0.4</mavenVersion>
     <wagonVersion>2.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <slf4jVersion>1.6.4</slf4jVersion>
   </properties>
 
   <dependencies>
@@ -168,14 +169,14 @@ under the License.
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.2</version>
+      <version>${slf4jVersion}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
-      <version>1.6.2</version>
+      <version>${slf4jVersion}</version>
       <scope>test</scope>
     </dependency>
 
