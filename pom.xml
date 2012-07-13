@@ -99,6 +99,26 @@ under the License.
         </exclusion>
       </exclusions>      
     </dependency>    
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-api</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-impl</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-spi</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-util</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
     
     <dependency>
       <groupId>org.apache.ant</groupId>
@@ -181,31 +201,6 @@ under the License.
     </dependency>
       
   </dependencies>
-  
-  <dependencyManagement>
-    <dependencies>
-        <dependency>
-          <groupId>org.sonatype.aether</groupId>
-          <artifactId>aether-api</artifactId>
-          <version>${aetherVersion}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.sonatype.aether</groupId>
-          <artifactId>aether-impl</artifactId>
-          <version>${aetherVersion}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.sonatype.aether</groupId>
-          <artifactId>aether-spi</artifactId>
-          <version>${aetherVersion}</version>
-        </dependency>
-        <dependency>
-          <groupId>org.sonatype.aether</groupId>
-          <artifactId>aether-util</artifactId>
-          <version>${aetherVersion}</version>
-        </dependency>
-    </dependencies>
-  </dependencyManagement>
   
   <build>
      
