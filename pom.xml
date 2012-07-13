@@ -46,6 +46,7 @@ under the License.
     <wagonVersion>2.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4jVersion>1.6.4</slf4jVersion>
+    <logbackVersion>1.0.0</logbackVersion>
   </properties>
 
   <dependencies>
@@ -183,21 +184,21 @@ under the License.
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>0.9.30</version>
+      <version>${logbackVersion}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>0.9.30</version>
+      <version>${logbackVersion}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-access</artifactId>
-      <version>0.9.30</version>
+      <version>${logbackVersion}</version>
       <scope>test</scope>
     </dependency>
       
