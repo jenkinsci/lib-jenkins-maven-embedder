@@ -42,8 +42,8 @@ under the License.
   
   <properties>
     <aetherVersion>1.13.1</aetherVersion>
-    <mavenVersion>3.0.4</mavenVersion>
-    <wagonVersion>2.2</wagonVersion>
+    <mavenVersion>3.0.5</mavenVersion>
+    <wagonVersion>2.4</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4jVersion>1.6.4</slf4jVersion>
     <logbackVersion>1.0.0</logbackVersion>
