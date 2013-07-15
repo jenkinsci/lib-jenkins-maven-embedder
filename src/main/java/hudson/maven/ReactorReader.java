@@ -31,9 +31,9 @@ import java.util.Map;
 
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.repository.WorkspaceReader;
-import org.sonatype.aether.repository.WorkspaceRepository;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.repository.WorkspaceReader;
+import org.eclipse.aether.repository.WorkspaceRepository;
 
 /**
  * NOTE : <b>this class is not designed for external use so it can change without any prior notice</b>

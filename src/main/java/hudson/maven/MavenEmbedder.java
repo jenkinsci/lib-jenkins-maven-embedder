@@ -75,7 +75,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.sonatype.aether.RepositorySystemSession;
+import org.eclipse.aether.RepositorySystemSession;
 
 
 /**
