@@ -57,9 +57,9 @@ public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module-with-parent/pom.xml" ) );
         Assert.assertEquals("my-app", project.getArtifactId());
         Assert.assertNotNull(project.getParent());
-        Assert.assertEquals("org.sonatype.oss", project.getParent().getGroupId());
-        Assert.assertEquals("oss-parent", project.getParent().getArtifactId());
-        Assert.assertEquals("5", project.getParent().getVersion());
+        Assert.assertEquals("org.jenkins-ci", project.getParent().getGroupId());
+        Assert.assertEquals("jenkins", project.getParent().getArtifactId());
+        Assert.assertEquals("1.32", project.getParent().getVersion());
     }
         
 }
