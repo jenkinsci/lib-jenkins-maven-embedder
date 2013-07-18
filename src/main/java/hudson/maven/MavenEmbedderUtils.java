@@ -39,6 +39,7 @@ import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.IOUtil;
+import org.eclipse.sisu.BeanScanning;
 
 
 /**
@@ -121,7 +122,10 @@ public class MavenEmbedderUtils
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
 
         conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() )
-        .setRealm( classRealm ).setClassWorld( world );
+            .setRealm( classRealm )
+            .setClassWorld( world )
+            .setClassPathScanning( mavenRequest.getContainerClassPathScanning() )
+            .setComponentVisibility( mavenRequest.getContainerComponentVisibility() );
         
         return buildPlexusContainer(mavenRequest,conf);
     }
@@ -137,11 +141,10 @@ public class MavenEmbedderUtils
     public static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
         
-        conf.setAutoWiring( mavenRequest.isContainerAutoWiring() );
-        conf.setClassPathScanning( mavenRequest.getContainerClassPathScanning() );
-        conf.setComponentVisibility( mavenRequest.getContainerComponentVisibility() );
-
-        conf.setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
+        conf.setAutoWiring( mavenRequest.isContainerAutoWiring() )
+            .setClassPathScanning( mavenRequest.getContainerClassPathScanning() )
+            .setComponentVisibility( mavenRequest.getContainerComponentVisibility() )
+            .setContainerConfigurationURL( mavenRequest.getOverridingComponentsXml() );
 
         ClassWorld classWorld = new ClassWorld();
 

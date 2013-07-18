@@ -50,9 +50,7 @@ public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
         }
         
         mavenRequest.setLocalRepositoryPath( localRepoPath );
-        
-        
-        
+
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
         
