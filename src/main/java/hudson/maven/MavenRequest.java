@@ -134,7 +134,7 @@ public class MavenRequest
     /**
      * @since 3.3
      */    
-    private String containerClassPathScanning = PlexusConstants.SCANNING_ON;
+    private String containerClassPathScanning = PlexusConstants.SCANNING_INDEX;
     
     public MavenRequest() {
         // no op
