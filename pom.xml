@@ -291,18 +291,7 @@ under the License.
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
-  
-  <distributionManagement>
-    <repository>
-      <id>maven.jenkins-ci.org</id>
-      <url>http://maven.jenkins-ci.org:8081/content/repositories/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>java.net-m2-repository</id>
-      <url>http://maven.jenkins-ci.org:8081/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>  
-  
+
   <profiles>
 
     <profile>
