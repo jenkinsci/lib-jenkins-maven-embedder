@@ -28,7 +28,7 @@ under the License.
   <groupId>org.jenkins-ci.lib</groupId>
   <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Jenkins Maven Embedder</name>
-  <version>3.11</version>
+  <version>3.12-SNAPSHOT</version>
   
   <prerequisites>
     <maven>3.0</maven>
@@ -38,7 +38,7 @@ under the License.
     <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/lib-jenkins-maven-embedder.git</developerConnection>
     <url>https://github.com/jenkinsci/lib-jenkins-maven-embedder</url>
-    <tag>lib-jenkins-maven-embedder-3.11</tag>
+    <tag>HEAD</tag>
   </scm>
   
   <properties>
