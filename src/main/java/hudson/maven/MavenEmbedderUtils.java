@@ -193,6 +193,7 @@ public class MavenEmbedderUtils
         InputStream inputStream = null;
         try {
             Thread.currentThread().setContextClassLoader( realm );
+            // TODO is this really intending to use findResource rather than getResource? Cf. https://github.com/sonatype/plexus-classworlds/pull/8
             URL resource = realm.findResource( POM_PROPERTIES_PATH );
             if (resource == null) {
                 throw new MavenEmbedderException("Couldn't find maven version information in '" + mavenHome.getPath()
@@ -219,6 +220,7 @@ public class MavenEmbedderUtils
     
     private static void debugMavenVersion(ClassRealm realm ) {
         try {
+            // TODO as above, consider getResources
             @SuppressWarnings("unchecked")
             Enumeration<URL> urls = realm.findResources( POM_PROPERTIES_PATH );
             System.out.println("urls for " + POM_PROPERTIES_PATH );
