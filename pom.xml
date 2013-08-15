@@ -88,12 +88,18 @@ under the License.
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
       <version>${sisuInjectVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonatype.sisu</groupId>
+          <artifactId>sisu-guice</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
-      <groupId>org.sonatype.sisu</groupId>
-      <artifactId>sisu-guice</artifactId>
-      <version>3.1.3</version>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>4.0-beta</version>
       <scope>provided</scope>
     </dependency>
 
@@ -257,6 +263,7 @@ under the License.
                 <bannedDependencies>
                   <excludes>
                     <exclude>org.codehaus.plexus:plexus-container-default</exclude>
+                    <exclude>org.sonatype.sisu:sisu-guice</exclude>
                   </excludes>
                   <message>
                   ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.
