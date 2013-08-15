@@ -38,8 +38,8 @@ public class TestMavenEmbedderUtils extends TestCase {
     
     public void testGetMavenVersionFromInvalidLocation() {
         try {
-            MavenEmbedderUtils.getMavenVersion( new File(System.getProperty("java.home")));
-            fail("We should have gotten a MavenEmbedderException");
+            MavenInformation mavenInformation =  MavenEmbedderUtils.getMavenVersion( new File(System.getProperty("java.home")));
+            fail("We should have gotten a MavenEmbedderException but: " + mavenInformation);
         } catch (MavenEmbedderException e) {
             // expected
         }
