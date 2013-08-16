@@ -53,4 +53,13 @@ public class MavenInformation implements Serializable {
     }
 
 
+    @Override
+    public String toString()
+    {
+        final StringBuilder sb = new StringBuilder( "MavenInformation{" );
+        sb.append( "version='" ).append( version ).append( '\'' );
+        sb.append( ", versionResourcePath='" ).append( versionResourcePath ).append( '\'' );
+        sb.append( '}' );
+        return sb.toString();
+    }
 }
