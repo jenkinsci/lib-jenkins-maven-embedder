@@ -39,7 +39,7 @@ import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.util.IOUtil;
-import org.eclipse.sisu.BeanScanning;
+import org.eclipse.sisu.space.BeanScanning;
 
 
 /**
