@@ -4,3 +4,5 @@
 target
 build
 *.iml
+.idea
+atlassian-ide-plugin.xml
