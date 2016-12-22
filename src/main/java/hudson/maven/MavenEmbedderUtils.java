@@ -24,10 +24,14 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tools.ant.AntClassLoader;
@@ -191,6 +195,8 @@ public class MavenEmbedderUtils
         }
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = null;
+        JarFile jarFile = null;
+        MavenInformation information = null;
         try {
             Thread.currentThread().setContextClassLoader( realm );
             // TODO is this really intending to use findResource rather than getResource? Cf. https://github.com/sonatype/plexus-classworlds/pull/8
@@ -199,17 +205,33 @@ public class MavenEmbedderUtils
                 throw new MavenEmbedderException("Couldn't find maven version information in '" + mavenHome.getPath()
                         + "'. Are you sure that this is a valid maven home?");
             }
-            inputStream = resource.openStream();
-            Properties properties = new Properties();
-            properties.load( inputStream );
-            return new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
+            URLConnection uc = resource.openConnection();
+            if (uc instanceof JarURLConnection) {
+                final JarURLConnection connection = (JarURLConnection)uc;
+                final String entryName = connection.getEntryName();
+                try {
+                    jarFile = connection.getJarFile();
+                    final JarEntry entry = (entryName != null && jarFile != null) ? jarFile.getJarEntry(entryName) : null;
+                    if (entry != null) {
+                        inputStream = jarFile.getInputStream(entry);
+                        Properties properties = new Properties();
+                        properties.load( inputStream );
+                        information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
+                    }
+                } finally {
+                    if (jarFile != null) {
+                        jarFile.close();
+                    }
+                }
+            }
         } catch ( IOException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
             IOUtil.close( inputStream );
             Thread.currentThread().setContextClassLoader( original );
         }
-        
+
+        return information;
     }
     
     public static boolean isAtLeastMavenVersion(File mavenHome, String version)  throws MavenEmbedderException {
