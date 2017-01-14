@@ -34,6 +34,14 @@ under the License.
     <maven>3.0</maven>
   </prerequisites>
    
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+   
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/lib-jenkins-maven-embedder.git</developerConnection>
