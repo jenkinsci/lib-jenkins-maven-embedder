@@ -51,4 +51,19 @@
       <url>file://${user.home}/mavenreposnapshot</url>    
     </snapshotRepository>
   </distributionManagement>  
+  
+  <!-- Required to discover Parent POM if it is not cached -->
+  <repositories>
+    <repository>
+      <id>m.g.o-public</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
 </project>
