@@ -51,7 +51,7 @@ under the License.
   </scm>
   
   <properties>
-    <aetherVersion>0.9.0.M2</aetherVersion>
+    <aetherVersion>1.1.0</aetherVersion>
     <mavenVersion>3.1.0</mavenVersion>
     <wagonVersion>2.4</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -112,7 +112,7 @@ under the License.
 
     <dependency>
       <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-wagon</artifactId>
+      <artifactId>aether-transport-wagon</artifactId>
       <version>${aetherVersion}</version>
       <exclusions>
         <exclusion>
