@@ -22,17 +22,26 @@ under the License.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.32</version>
+    <version>1.37</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jenkins-ci.lib</groupId>
   <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Jenkins Maven Embedder</name>
+  <description>Library for Jenkins plugins and other components, which allows embedding Maven into their logic</description>
   <version>3.12-SNAPSHOT</version>
   
   <prerequisites>
     <maven>3.0</maven>
   </prerequisites>
+   
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
    
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
@@ -208,7 +217,7 @@ under the License.
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.5.3</version>
           <configuration>
             <goals>deploy</goals>
             <useReleaseProfile>false</useReleaseProfile>
@@ -274,7 +283,7 @@ under the License.
   <repositories>
     <repository>
       <id>m.g.o-public</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -287,7 +296,7 @@ under the License.
   <pluginRepositories>
     <pluginRepository>
       <id>m.g.o-public</id>
-      <url>http://repo.jenkins-ci.org/public/</url>
+      <url>https://repo.jenkins-ci.org/public/</url>
       <releases>
         <enabled>true</enabled>
       </releases>

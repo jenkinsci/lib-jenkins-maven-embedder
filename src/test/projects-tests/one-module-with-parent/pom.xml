@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.32</version>
+    <version>1.37</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -51,4 +51,19 @@
       <url>file://${user.home}/mavenreposnapshot</url>    
     </snapshotRepository>
   </distributionManagement>  
+  
+  <!-- Required to discover Parent POM if it is not cached -->
+  <repositories>
+    <repository>
+      <id>m.g.o-public</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
 </project>

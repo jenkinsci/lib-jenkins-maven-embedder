@@ -59,7 +59,7 @@ public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
         Assert.assertNotNull(project.getParent());
         Assert.assertEquals("org.jenkins-ci", project.getParent().getGroupId());
         Assert.assertEquals("jenkins", project.getParent().getArtifactId());
-        Assert.assertEquals("1.32", project.getParent().getVersion());
+        Assert.assertEquals("1.37", project.getParent().getVersion());
     }
         
 }
