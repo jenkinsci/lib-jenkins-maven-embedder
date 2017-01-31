@@ -3,7 +3,7 @@ Changelog
 
 ### 3.12
 
-Release date: TBD, 2017
+Release date: Jan 16, 2017
 
 * [JENKINS-40621](https://issues.jenkins-ci.org/browse/JENKINS-40621) - 
 Prevent leaked file descriptorswhen invoking `MavenEmbedderUtils#getMavenVersion()`
