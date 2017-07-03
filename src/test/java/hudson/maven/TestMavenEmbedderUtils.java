@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import junit.framework.TestCase;
+import org.jvnet.hudson.test.Issue;
 
 /**
  * @author Olivier Lamy
@@ -48,5 +49,20 @@ public class TestMavenEmbedderUtils extends TestCase {
     public void testisAtLeastMavenVersion() throws Exception {
        assertTrue( MavenEmbedderUtils.isAtLeastMavenVersion( new File( System.getProperty( "maven.home" ) ), "3.0" ) );
        assertFalse( MavenEmbedderUtils.isAtLeastMavenVersion( new File( "src/test/maven-2.2.1" ), "3.0" ) );
-    }     
+    }
+    
+    @Issue("JENKINS-42549")
+    public void testIfFailsInTheCaseOfRaceConditions() throws Exception {
+        final File mvnHome = new File( System.getProperty( "maven.home" ));
+        final MavenEmbedderCallable nestedLoad = new MavenEmbedderCallable() {
+            @Override
+            public void call() throws MavenEmbedderException {
+                // Here we invoke the nested call in order to emulate the race condition
+                // between multiple threads.
+                MavenEmbedderUtils.getMavenVersion(mvnHome);
+            }
+        };
+         
+        MavenEmbedderUtils.getMavenVersion(mvnHome, nestedLoad); 
+    }
 }

@@ -32,6 +32,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tools.ant.AntClassLoader;
@@ -179,14 +181,17 @@ public class MavenEmbedderUtils
         }
     }
         
-    
-    
     /**
-     * @param mavenHome
+     * @param mavenHome Maven Home directory
      * @return the maven version 
-     * @throws MavenEmbedderException
+     * @throws MavenEmbedderException Operation failure
      */
-    public static MavenInformation getMavenVersion(File mavenHome) throws MavenEmbedderException {
+    public static MavenInformation getMavenVersion(@Nonnull File mavenHome) throws MavenEmbedderException {
+        return getMavenVersion(mavenHome, null);
+    }
+    
+    /*package*/ static MavenInformation getMavenVersion(@Nonnull File mavenHome, 
+            @CheckForNull MavenEmbedderCallable preopertiesPreloadHook) throws MavenEmbedderException {
         
         ClassRealm realm = buildClassRealm( mavenHome, null, null );
         if (debug) {
@@ -213,6 +218,9 @@ public class MavenEmbedderUtils
                     final JarEntry entry = (entryName != null && jarFile != null) ? jarFile.getJarEntry(entryName) : null;
                     if (entry != null) {
                         inputStream = jarFile.getInputStream(entry);
+                        if (preopertiesPreloadHook != null) {
+                            preopertiesPreloadHook.call();
+                        }
                         Properties properties = new Properties();
                         properties.load( inputStream );
                         information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
