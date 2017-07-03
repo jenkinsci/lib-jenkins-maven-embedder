@@ -20,6 +20,7 @@ package hudson.maven;
  * under the License.
  */
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -193,13 +194,16 @@ public class MavenEmbedderUtils
     /*package*/ static MavenInformation getMavenVersion(@Nonnull File mavenHome, 
             @CheckForNull MavenEmbedderCallable preopertiesPreloadHook) throws MavenEmbedderException {
         
-        ClassRealm realm = buildClassRealm( mavenHome, null, null );
-        if (debug) {
-            debugMavenVersion(realm);
-        }
-        ClassLoader original = Thread.currentThread().getContextClassLoader();
         MavenInformation information = null;
+        ClassLoader original = null;
+        ClassRealm realm = null;
         try {
+            realm = buildClassRealm( mavenHome, null, null );
+            if (debug) {
+                debugMavenVersion(realm);
+            }
+            original = Thread.currentThread().getContextClassLoader();
+        
             Thread.currentThread().setContextClassLoader( realm );
             // TODO is this really intending to use findResource rather than getResource? Cf. https://github.com/sonatype/plexus-classworlds/pull/8
             URL resource = realm.findResource( POM_PROPERTIES_PATH );
@@ -224,9 +228,21 @@ public class MavenEmbedderUtils
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
             Thread.currentThread().setContextClassLoader( original );
+            closeIt(realm);
         }
 
         return information;
+    }
+    
+    private static final void closeIt(@CheckForNull Closeable obj) throws MavenEmbedderException {
+        if (obj == null) {
+            return;
+        }
+        try {
+            obj.close();
+        } catch(IOException ex) {
+            throw new MavenEmbedderException("Failed to close " + obj, ex);
+        }
     }
     
     public static boolean isAtLeastMavenVersion(File mavenHome, String version)  throws MavenEmbedderException {
