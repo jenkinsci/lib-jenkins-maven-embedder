@@ -198,8 +198,6 @@ public class MavenEmbedderUtils
             debugMavenVersion(realm);
         }
         ClassLoader original = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = null;
-        JarFile jarFile = null;
         MavenInformation information = null;
         try {
             Thread.currentThread().setContextClassLoader( realm );
@@ -210,31 +208,21 @@ public class MavenEmbedderUtils
                         + "'. Are you sure that this is a valid maven home?");
             }
             URLConnection uc = resource.openConnection();
-            if (uc instanceof JarURLConnection) {
-                final JarURLConnection connection = (JarURLConnection)uc;
-                final String entryName = connection.getEntryName();
-                try {
-                    jarFile = connection.getJarFile();
-                    final JarEntry entry = (entryName != null && jarFile != null) ? jarFile.getJarEntry(entryName) : null;
-                    if (entry != null) {
-                        inputStream = jarFile.getInputStream(entry);
-                        if (preopertiesPreloadHook != null) {
-                            preopertiesPreloadHook.call();
-                        }
-                        Properties properties = new Properties();
-                        properties.load( inputStream );
-                        information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
-                    }
-                } finally {
-                    if (jarFile != null) {
-                        jarFile.close();
-                    }
+            uc.setUseCaches(false);
+            InputStream istream = uc.getInputStream();
+            try {
+                if (preopertiesPreloadHook != null) {
+                    preopertiesPreloadHook.call();
                 }
-            }
+                Properties properties = new Properties();
+                properties.load( istream );
+                information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() ); 
+            } finally {
+                istream.close();
+            } 
         } catch ( IOException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
-            IOUtil.close( inputStream );
             Thread.currentThread().setContextClassLoader( original );
         }
 
