@@ -20,6 +20,7 @@ package hudson.maven;
  * under the License.
  */
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -32,6 +33,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tools.ant.AntClassLoader;
@@ -179,24 +182,28 @@ public class MavenEmbedderUtils
         }
     }
         
-    
-    
     /**
-     * @param mavenHome
+     * @param mavenHome Maven Home directory
      * @return the maven version 
-     * @throws MavenEmbedderException
+     * @throws MavenEmbedderException Operation failure
      */
-    public static MavenInformation getMavenVersion(File mavenHome) throws MavenEmbedderException {
+    public static MavenInformation getMavenVersion(@Nonnull File mavenHome) throws MavenEmbedderException {
+        return getMavenVersion(mavenHome, null);
+    }
+    
+    /*package*/ static MavenInformation getMavenVersion(@Nonnull File mavenHome, 
+            @CheckForNull MavenEmbedderCallable preopertiesPreloadHook) throws MavenEmbedderException {
         
-        ClassRealm realm = buildClassRealm( mavenHome, null, null );
-        if (debug) {
-            debugMavenVersion(realm);
-        }
-        ClassLoader original = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = null;
-        JarFile jarFile = null;
         MavenInformation information = null;
+        ClassLoader original = null;
+        ClassRealm realm = null;
         try {
+            realm = buildClassRealm( mavenHome, null, null );
+            if (debug) {
+                debugMavenVersion(realm);
+            }
+            original = Thread.currentThread().getContextClassLoader();
+        
             Thread.currentThread().setContextClassLoader( realm );
             // TODO is this really intending to use findResource rather than getResource? Cf. https://github.com/sonatype/plexus-classworlds/pull/8
             URL resource = realm.findResource( POM_PROPERTIES_PATH );
@@ -205,32 +212,37 @@ public class MavenEmbedderUtils
                         + "'. Are you sure that this is a valid maven home?");
             }
             URLConnection uc = resource.openConnection();
-            if (uc instanceof JarURLConnection) {
-                final JarURLConnection connection = (JarURLConnection)uc;
-                final String entryName = connection.getEntryName();
-                try {
-                    jarFile = connection.getJarFile();
-                    final JarEntry entry = (entryName != null && jarFile != null) ? jarFile.getJarEntry(entryName) : null;
-                    if (entry != null) {
-                        inputStream = jarFile.getInputStream(entry);
-                        Properties properties = new Properties();
-                        properties.load( inputStream );
-                        information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() );
-                    }
-                } finally {
-                    if (jarFile != null) {
-                        jarFile.close();
-                    }
+            uc.setUseCaches(false);
+            InputStream istream = uc.getInputStream();
+            try {
+                if (preopertiesPreloadHook != null) {
+                    preopertiesPreloadHook.call();
                 }
-            }
+                Properties properties = new Properties();
+                properties.load( istream );
+                information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() ); 
+            } finally {
+                istream.close();
+            } 
         } catch ( IOException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
-            IOUtil.close( inputStream );
             Thread.currentThread().setContextClassLoader( original );
+            closeIt(realm);
         }
 
         return information;
+    }
+    
+    private static final void closeIt(@CheckForNull Closeable obj) throws MavenEmbedderException {
+        if (obj == null) {
+            return;
+        }
+        try {
+            obj.close();
+        } catch(IOException ex) {
+            throw new MavenEmbedderException("Failed to close " + obj, ex);
+        }
     }
     
     public static boolean isAtLeastMavenVersion(File mavenHome, String version)  throws MavenEmbedderException {
