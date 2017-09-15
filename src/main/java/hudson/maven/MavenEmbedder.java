@@ -40,6 +40,7 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.cli.MavenCli;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -242,12 +243,12 @@ public class MavenEmbedder
         if ( this.mavenRequest.getGlobalSettingsFile() != null ) {
             settingsBuildingRequest.setGlobalSettingsFile( new File( this.mavenRequest.getGlobalSettingsFile() ) );
         } else {
-            settingsBuildingRequest.setGlobalSettingsFile( MavenCli.DEFAULT_GLOBAL_SETTINGS_FILE );
+            settingsBuildingRequest.setGlobalSettingsFile( SettingsXmlConfigurationProcessor.DEFAULT_GLOBAL_SETTINGS_FILE );
         }
         if ( this.mavenRequest.getUserSettingsFile() != null ) {
             settingsBuildingRequest.setUserSettingsFile( new File( this.mavenRequest.getUserSettingsFile() ) );
         } else {
-            settingsBuildingRequest.setUserSettingsFile( MavenCli.DEFAULT_USER_SETTINGS_FILE );
+            settingsBuildingRequest.setUserSettingsFile( SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE );
         }
 
         settingsBuildingRequest.setUserProperties( this.mavenRequest.getUserProperties() );
