@@ -22,14 +22,14 @@ under the License.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.37</version>
+    <version>1.39</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jenkins-ci.lib</groupId>
   <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Jenkins Maven Embedder</name>
   <description>Library for Jenkins plugins and other components, which allows embedding Maven into their logic</description>
-  <version>3.12.2-SNAPSHOT</version>
+  <version>3.13-SNAPSHOT</version>
   
   <prerequisites>
     <maven>3.0</maven>
@@ -53,17 +53,13 @@ under the License.
   <properties>
     <aetherVersion>1.1.0</aetherVersion>
     <mavenVersion>3.5.0</mavenVersion>
-    <wagonVersion>2.12</wagonVersion>
+    <wagonVersion>3.0.0</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4jVersion>1.7.4</slf4jVersion>
+    <slf4jVersion>1.7.22</slf4jVersion>
+    <java.level>7</java.level>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-classworlds</artifactId>
-      <version>2.5.1</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
