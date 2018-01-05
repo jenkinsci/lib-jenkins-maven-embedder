@@ -1,6 +1,16 @@
 Changelog
 ===
 
+### 3.13
+
+Release date: Jan 05, 2017
+
+* [PR #15](https://github.com/jenkinsci/lib-jenkins-maven-embedder/pull/15) -
+Whitelist contents of the library so its classes can be serialized
+successfully on Jenkins cores with the
+[JENKINS-47736](https://issues.jenkins-ci.org/browse/JENKINS-47736) patch
+
+
 ### 3.12.1
 
 Release date: Jul 06, 2017
