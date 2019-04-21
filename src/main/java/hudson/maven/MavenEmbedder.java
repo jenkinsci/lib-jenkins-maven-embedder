@@ -15,20 +15,7 @@
  */
 package hudson.maven;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.DefaultMaven;
 import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
@@ -39,7 +26,6 @@ import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.cli.MavenCli;
 import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
@@ -77,6 +63,20 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.aether.RepositorySystemSession;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 
 /**
@@ -302,11 +302,19 @@ public class MavenEmbedder
     // Model
     // ----------------------------------------------------------------------
 
+    /**
+     * @deprecated not sure if use but definitely doesn't work
+     */
+    @SuppressFBWarnings({"UWF_UNWRITTEN_FIELD","NP_UNWRITTEN_FIELD","DM_DEFAULT_ENCODING","OBL_UNSATISFIED_OBLIGATION"})
     public Model readModel( File model )
         throws XmlPullParserException, FileNotFoundException, IOException {
         return modelReader.read( new FileReader( model ) );
     }
 
+    /**
+     * @deprecated not sure if use but definitely doesn't work
+     */
+    @SuppressFBWarnings({"UWF_UNWRITTEN_FIELD","NP_UNWRITTEN_FIELD"})
     public void writeModel( Writer writer, Model model )
         throws IOException
     {
@@ -330,7 +338,7 @@ public class MavenEmbedder
         ClassLoader originalCl = Thread.currentThread().getContextClassLoader();
         try {
             List<ProjectBuildingResult> results = buildProjects( mavenProject, recursive );
-            List<MavenProject> projects = new ArrayList<MavenProject>(results.size());
+            List<MavenProject> projects = new ArrayList<>(results.size());
             for (ProjectBuildingResult result : results) {
                 projects.add( result.getProject() );
             }
@@ -377,7 +385,7 @@ public class MavenEmbedder
 
     public List<MavenProject> collectProjects( File basedir, String[] includes, String[] excludes )
         throws MojoExecutionException, MavenEmbedderException {
-        List<MavenProject> projects = new ArrayList<MavenProject>();
+        List<MavenProject> projects = new ArrayList<>();
 
         List<File> poms = getPomFiles( basedir, includes, excludes );
 
@@ -517,7 +525,7 @@ public class MavenEmbedder
 
         scanner.scan();
 
-        List<File> poms = new ArrayList<File>();
+        List<File> poms = new ArrayList<>();
 
         for ( int i = 0; i < scanner.getIncludedFiles().length; i++ ) {
             poms.add( new File( basedir, scanner.getIncludedFiles()[i] ) );
@@ -547,7 +555,7 @@ public class MavenEmbedder
            //         proxy.getPassword(), proxy.getNonProxyHosts());
         }
 
-        for (Server server : (List<Server>)settings.getServers()) {
+        for (Server server : settings.getServers()) {
             //wagonManager.addAuthenticationInfo(server.getId(), server.getUsername(), server.getPassword(),
             //        server.getPrivateKey(), server.getPassphrase());
 
@@ -559,7 +567,7 @@ public class MavenEmbedder
             }
         }
 
-        for (Mirror mirror : (List<Mirror>)settings.getMirrors()) {
+        for (Mirror mirror : settings.getMirrors()) {
             //wagonManager.addMirror(mirror.getId(), mirror.getMirrorOf(), mirror.getUrl());
         }
     }
@@ -582,9 +590,9 @@ public class MavenEmbedder
     
     private Map<String,String> propertiesToMap(Properties properties) {
         if ( properties == null || properties.isEmpty() ) {
-            return new HashMap<String, String>( 0 );
+            return new HashMap<>( 0 );
         }
-        Map<String, String> result = new HashMap<String, String>( properties.size() );
+        Map<String, String> result = new HashMap<>( properties.size() );
         for ( Entry<Object, Object> entry : properties.entrySet() ) {
             result.put( (String) entry.getKey(), (String) entry.getValue() );
         }

@@ -58,7 +58,7 @@ public class ReactorReader
     {
         projectsByGAV = reactorProjects;
         this.workspaceRoot = workspaceRoot;
-        projectsByGA = new HashMap<String, List<MavenProject>>( reactorProjects.size() * 2 );
+        projectsByGA = new HashMap<>( reactorProjects.size() * 2 );
         for ( MavenProject project : reactorProjects.values() )
         {
             String key = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
@@ -67,7 +67,7 @@ public class ReactorReader
 
             if ( projects == null )
             {
-                projects = new ArrayList<MavenProject>( 1 );
+                projects = new ArrayList<>( 1 );
                 projectsByGA.put( key, projects );
             }
 

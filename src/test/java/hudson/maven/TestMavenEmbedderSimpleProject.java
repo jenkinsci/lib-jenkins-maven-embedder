@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -62,7 +63,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         mavenRequest.setGoals( Arrays.asList( "clean", "test" ) );
         mavenRequest.getUserProperties().put( "failIfNoTests", "false" );
 
-        final List<String> executedMojos = new ArrayList<String>();
+        final List<String> executedMojos = new ArrayList<>();
         
         AbstractExecutionListener listener = new AbstractExecutionListener()
         {
@@ -109,7 +110,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ).getAbsolutePath() );
 
         mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
-        
+
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
