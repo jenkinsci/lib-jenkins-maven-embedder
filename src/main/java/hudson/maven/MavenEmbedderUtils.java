@@ -20,22 +20,7 @@ package hudson.maven;
  * under the License.
  */
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.JarURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.tools.ant.AntClassLoader;
 import org.codehaus.plexus.ContainerConfiguration;
@@ -45,7 +30,17 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.util.IOUtil;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Enumeration;
+import java.util.Properties;
 
 
 /**
@@ -72,6 +67,7 @@ public class MavenEmbedderUtils
      * @param world can be <code>null</code>
      * @return
      */
+    @SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
     public static ClassRealm buildClassRealm(File mavenHome, ClassWorld world, ClassLoader parentClassLoader )
         throws MavenEmbedderException {
         
@@ -89,32 +85,29 @@ public class MavenEmbedderUtils
             throw new IllegalArgumentException( mavenHome.getPath() + " doesn't have a 'lib' subdirectory - thus cannot be a valid maven installation!" );
         }
 
-        File[] jarFiles = libDirectory.listFiles( new FilenameFilter()
-        {
-            public boolean accept( File dir, String name ) {
-                return name.endsWith( ".jar" );
-            }
-        } );
+        File[] jarFiles = libDirectory.listFiles( ( dir, name ) ->  name.endsWith( ".jar" ));
         
         
         AntClassLoader antClassLoader = new AntClassLoader( Thread.currentThread().getContextClassLoader(), false );
         
-
-        for ( File jarFile : jarFiles ) {
-            antClassLoader.addPathComponent( jarFile );
+        if(jarFiles!=null) {
+            for ( File jarFile : jarFiles ) {
+                antClassLoader.addPathComponent( jarFile );
+            }
         }
-        
         if (world == null) {
             world = new ClassWorld();
         }
         
         ClassRealm classRealm = new ClassRealm( world, "plexus.core", parentClassLoader == null ? antClassLoader : parentClassLoader );
 
-        for ( File jarFile : jarFiles ) {
-            try {
-                classRealm.addURL( jarFile.toURI().toURL() );
-            } catch ( MalformedURLException e ) {
-                throw new MavenEmbedderException( e.getMessage(), e );
+        if(jarFiles!=null) {
+            for ( File jarFile : jarFiles ) {
+                try {
+                    classRealm.addURL( jarFile.toURI().toURL() );
+                } catch ( MalformedURLException e ) {
+                    throw new MavenEmbedderException( e.getMessage(), e );
+                }
             }
         }
         return classRealm;
@@ -144,6 +137,7 @@ public class MavenEmbedderUtils
      * @return
      * @throws MavenEmbedderException
      */
+    @SuppressFBWarnings("DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED")
     public static PlexusContainer buildPlexusContainer(ClassLoader mavenClassLoader, ClassLoader parent, MavenRequest mavenRequest) throws MavenEmbedderException {
         DefaultContainerConfiguration conf = new DefaultContainerConfiguration();
         
@@ -196,9 +190,9 @@ public class MavenEmbedderUtils
         
         MavenInformation information = null;
         ClassLoader original = null;
-        ClassRealm realm = null;
-        try {
-            realm = buildClassRealm( mavenHome, null, null );
+        //ClassRealm realm = null;
+        try (ClassRealm realm = buildClassRealm( mavenHome, null, null )) {
+            //realm = buildClassRealm( mavenHome, null, null );
             if (debug) {
                 debugMavenVersion(realm);
             }
@@ -213,38 +207,23 @@ public class MavenEmbedderUtils
             }
             URLConnection uc = resource.openConnection();
             uc.setUseCaches(false);
-            InputStream istream = uc.getInputStream();
-            try {
+            try(InputStream istream = uc.getInputStream()) {
                 if (preopertiesPreloadHook != null) {
                     preopertiesPreloadHook.call();
                 }
                 Properties properties = new Properties();
                 properties.load( istream );
                 information = new MavenInformation( properties.getProperty( "version" ) , resource.toExternalForm() ); 
-            } finally {
-                istream.close();
-            } 
+            }
         } catch ( IOException e ) {
             throw new MavenEmbedderException( e.getMessage(), e );
         } finally {
             Thread.currentThread().setContextClassLoader( original );
-            closeIt(realm);
         }
 
         return information;
     }
-    
-    private static final void closeIt(@CheckForNull Closeable obj) throws MavenEmbedderException {
-        if (obj == null) {
-            return;
-        }
-        try {
-            obj.close();
-        } catch(IOException ex) {
-            throw new MavenEmbedderException("Failed to close " + obj, ex);
-        }
-    }
-    
+
     public static boolean isAtLeastMavenVersion(File mavenHome, String version)  throws MavenEmbedderException {
         ComparableVersion found = new ComparableVersion( getMavenVersion( mavenHome ).getVersion() );
         ComparableVersion testedOne = new ComparableVersion( version );
@@ -265,6 +244,6 @@ public class MavenEmbedderUtils
         }
     }
     
-    public static boolean debug = Boolean.getBoolean( "hudson.maven.MavenEmbedderUtils.debug" );
+    public static final boolean debug = Boolean.getBoolean( "hudson.maven.MavenEmbedderUtils.debug" );
 
 }

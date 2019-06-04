@@ -23,5 +23,5 @@ package hudson.maven;
  */
 /*package*/ interface MavenEmbedderCallable {
     
-    public void call() throws MavenEmbedderException;
+    void call() throws MavenEmbedderException;
 }

@@ -22,7 +22,7 @@ under the License.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.37</version>
+    <version>1.51</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jenkins-ci.lib</groupId>
@@ -30,11 +30,7 @@ under the License.
   <name>Jenkins Maven Embedder</name>
   <description>Library for Jenkins plugins and other components, which allows embedding Maven into their logic</description>
   <version>3.14-SNAPSHOT</version>
-  
-  <prerequisites>
-    <maven>3.0</maven>
-  </prerequisites>
-   
+
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -51,18 +47,19 @@ under the License.
   </scm>
   
   <properties>
-    <aetherVersion>1.1.0</aetherVersion>
-    <mavenVersion>3.5.0</mavenVersion>
-    <wagonVersion>2.12</wagonVersion>
+    <resolverVersion>1.1.1</resolverVersion>
+    <mavenVersion>3.5.4</mavenVersion>
+    <wagonVersion>3.3.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4jVersion>1.7.4</slf4jVersion>
+    <slf4jVersion>1.7.25</slf4jVersion>
+    <java.level>8</java.level>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-classworlds</artifactId>
-      <version>2.5.1</version>
+      <version>2.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -105,9 +102,9 @@ under the License.
     </dependency>
 
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-transport-wagon</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-wagon</artifactId>
+      <version>${resolverVersion}</version>
       <exclusions>
         <exclusion>
           <groupId>org.codehaus.plexus</groupId>
@@ -116,36 +113,42 @@ under the License.
       </exclusions>      
     </dependency>    
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-impl</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-impl</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-spi</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-spi</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-util</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-util</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-basic</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-connector-basic</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <version>1.9.2</version>
-    </dependency>   
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>annotations</artifactId>
+      <scope>compile</scope>
+    </dependency>
     
     <!--  Wagon -->
     <dependency>
@@ -171,7 +174,11 @@ under the License.
         </exclusion>
       </exclusions>
     </dependency>
-    
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.6</version>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -236,19 +243,34 @@ under the License.
           <artifactId>maven-dependency-plugin</artifactId>
           <version>2.8</version>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <configuration>
+            <rules>
+              <requireUpperBoundDeps>
+                <excludes combine.children="append">
+                  <exclude>com.google.inject:guice</exclude>
+                  <exclude>com.google.guava:guava</exclude>
+                </excludes>
+              </requireUpperBoundDeps>
+            </rules>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
+        <version>3.8.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.15</version>
+        <version>2.22.1</version>
         <configuration>
+          <trimStackTrace>false</trimStackTrace>
           <systemPropertyVariables>
             <maven.home>${maven.home}</maven.home>
             <maven.version>${maven.version}</maven.version>
@@ -259,7 +281,6 @@ under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.3.1</version>
         <executions>
           <execution>
             <goals>
@@ -278,6 +299,11 @@ under the License.
                   ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.
                   </message>
                 </bannedDependencies>
+                <requireUpperBoundDeps>
+                  <excludes>
+                    <exclude>com.google.inject:guice</exclude>
+                  </excludes>
+                </requireUpperBoundDeps>
               </rules>
               <fail>true</fail>
             </configuration>
@@ -346,7 +372,7 @@ under the License.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>

@@ -19,46 +19,52 @@ package hudson.maven;
  * under the License.
  */
 
-import java.io.File;
-
+import junit.framework.TestCase;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Assert;
 
-import junit.framework.TestCase;
+import java.io.File;
 
 /**
  * @author olamy
  */
-public class TestMavenEmbedderSimpleProjectWithParent extends TestCase {
+public class TestMavenEmbedderSimpleProjectWithParent
+    extends TestCase
+{
 
-    public void testSimpleProjectRead() throws Exception {
-	MavenRequest mavenRequest = new MavenRequest();
-	mavenRequest.setLoggingLevel(1);
+    public void testSimpleProjectRead()
+        throws Exception
+    {
+        MavenRequest mavenRequest = new MavenRequest();
+        mavenRequest.setLoggingLevel( 1 );
 
-	mavenRequest.setPom(new File("src/test/projects-tests/one-module-with-parent/pom.xml").getAbsolutePath());
+        mavenRequest.setPom( new File( "src/test/projects-tests/one-module-with-parent/pom.xml" ).getAbsolutePath() );
 
-	String localRepoPath = System.getProperty("localRepository", "./target/repo-maven");
+        String localRepoPath = System.getProperty( "localRepository", "./target/repo-maven" );
 
-	System.out.println(" use localRepo path " + localRepoPath);
+        System.out.println( " use localRepo path " + localRepoPath );
 
-	File dir = new File(localRepoPath + "/org/sonatype/oss/oss-parent/5/");
+        File dir = new File( localRepoPath + "/org/sonatype/oss/oss-parent/5/" );
 
-	if (dir.exists()) {
-	    FileUtils.deleteDirectory(dir);
-	}
+        if ( dir.exists() )
+        {
+            FileUtils.deleteDirectory( dir );
+        }
 
-	mavenRequest.setLocalRepositoryPath(localRepoPath);
+        mavenRequest.setLocalRepositoryPath( localRepoPath );
 
-	mavenRequest.setBaseDirectory(new File("src/test/projects-tests/scm-git-test-one-module").getAbsolutePath());
-	MavenEmbedder mavenEmbedder = new MavenEmbedder(Thread.currentThread().getContextClassLoader(), mavenRequest);
+        mavenRequest.setBaseDirectory(
+            new File( "src/test/projects-tests/scm-git-test-one-module" ).getAbsolutePath() );
+        MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
 
-	MavenProject project = mavenEmbedder.readProject(new File("src/test/projects-tests/one-module-with-parent/pom.xml"));
-	Assert.assertEquals("my-app", project.getArtifactId());
-	Assert.assertNotNull(project.getParent());
-	Assert.assertEquals("org.jenkins-ci", project.getParent().getGroupId());
-	Assert.assertEquals("jenkins", project.getParent().getArtifactId());
-	Assert.assertEquals("1.37", project.getParent().getVersion());
+        MavenProject project =
+            mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module-with-parent/pom.xml" ) );
+        Assert.assertEquals( "my-app", project.getArtifactId() );
+        Assert.assertNotNull( project.getParent() );
+        Assert.assertEquals( "org.jenkins-ci", project.getParent().getGroupId() );
+        Assert.assertEquals( "jenkins", project.getParent().getArtifactId() );
+        Assert.assertEquals( "1.37", project.getParent().getVersion() );
     }
 
 }

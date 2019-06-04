@@ -43,7 +43,7 @@ public class TestMavenModules extends TestCase {
         mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
 
         ReactorReader reactorReader = 
-            new ReactorReader( new HashMap<String, MavenProject>(), new File (mavenRequest.getPom() ).getParentFile() );
+            new ReactorReader( new HashMap<>(), new File (mavenRequest.getPom() ).getParentFile() );
         
         mavenRequest.setWorkspaceReader( reactorReader );
         
@@ -82,7 +82,7 @@ public class TestMavenModules extends TestCase {
         mavenRequest.setLocalRepositoryPath( System.getProperty( "localRepository" , "./target/repo-maven" ) );
 
         ReactorReader reactorReader =
-            new ReactorReader( new HashMap<String, MavenProject>(), new File (mavenRequest.getPom() ).getParentFile() );
+            new ReactorReader( new HashMap<>(), new File (mavenRequest.getPom() ).getParentFile() );
 
         mavenRequest.setWorkspaceReader( reactorReader );
 
