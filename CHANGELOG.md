@@ -1,6 +1,12 @@
 Changelog
 ===
 
+### 3.14
+
+Release date: Jun 12, 2019
+
+* [JENKINS-54530](https://issues.jenkins-ci.org/browse/JENKINS-54530) Upgrade maven embedder from 3.1.0 to at least 3.5.4
+
 ### 3.12.1
 
 Release date: Jul 06, 2017
