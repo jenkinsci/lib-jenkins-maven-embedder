@@ -29,7 +29,7 @@ under the License.
   <artifactId>lib-jenkins-maven-embedder</artifactId>
   <name>Jenkins Maven Embedder</name>
   <description>Library for Jenkins plugins and other components, which allows embedding Maven into their logic</description>
-  <version>3.14-SNAPSHOT</version>
+  <version>3.14</version>
 
   <licenses>
     <license>
@@ -43,7 +43,7 @@ under the License.
     <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/lib-jenkins-maven-embedder.git</developerConnection>
     <url>https://github.com/jenkinsci/lib-jenkins-maven-embedder</url>
-    <tag>HEAD</tag>
+    <tag>lib-jenkins-maven-embedder-3.14</tag>
   </scm>
   
   <properties>
