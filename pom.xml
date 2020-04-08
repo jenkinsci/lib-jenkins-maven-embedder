@@ -80,7 +80,18 @@ under the License.
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-embedder</artifactId>
       <version>${mavenVersion}</version>
-    </dependency>  
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonatype.plexus</groupId>
+          <artifactId>plexus-cipher</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-cipher</artifactId>
+      <version>1.8</version>
+    </dependency>
     
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
@@ -287,13 +298,14 @@ under the License.
               <goal>enforce</goal>
             </goals>
             <phase>validate</phase>
-            <id>ensure-no-plexus-container</id>
+            <id>ensure-no-plexus-librairies</id>
             <configuration>
               <rules>
                 <bannedDependencies>
                   <excludes>
                     <exclude>org.codehaus.plexus:plexus-container-default</exclude>
                     <exclude>org.sonatype.sisu:sisu-guice</exclude>
+                    <exclude>org.sonatype.plexus:plexus-cipher</exclude>
                   </excludes>
                   <message>
                   ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.
