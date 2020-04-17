@@ -1,6 +1,13 @@
 Changelog
 ===
 
+### 3.15 
+
+Release date: Apr 8, 2020
+
+* update plexus-cipher to 1.8
+* fix build to get it working with Java11
+
 ### 3.14
 
 Release date: Jun 12, 2019
