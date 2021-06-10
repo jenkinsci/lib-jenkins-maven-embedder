@@ -1,0 +1,2 @@
+_extends: .github
+tag-template: lib-jenkins-maven-embedder-$NEXT_MINOR_VERSION
