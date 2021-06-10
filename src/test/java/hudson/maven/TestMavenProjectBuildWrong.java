@@ -22,20 +22,20 @@ package hudson.maven;
 import java.io.File;
 import java.util.HashMap;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author olamy
  *
  */
-public class TestMavenProjectBuildWrong extends TestCase {
+public class TestMavenProjectBuildWrong {
 
-
-    
+    @Test
     public void testWrongInheritenceWithMaven2() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/incorrect-inheritence-testcase/pom.xml" ).getAbsolutePath() );
@@ -63,7 +63,8 @@ public class TestMavenProjectBuildWrong extends TestCase {
         }
         
     } 
-    
+
+    @Test(expected = ProjectBuildingException.class)
     public void testWrongInheritenceWithMaven3() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_3_0 );
@@ -74,12 +75,8 @@ public class TestMavenProjectBuildWrong extends TestCase {
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
-        try  {
-            mavenEmbedder.readProjects( new File( "src/test/projects-tests/incorrect-inheritence-testcase/pom.xml" ), true );
-            fail("not in ProjectBuildingException");
-        } catch (ProjectBuildingException e) {
-            // we need to pass here !
-        }
+        mavenEmbedder.readProjects( new File( "src/test/projects-tests/incorrect-inheritence-testcase/pom.xml" ), true );
+
     }     
     
 }

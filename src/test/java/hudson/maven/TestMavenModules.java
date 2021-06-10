@@ -34,8 +34,6 @@ import org.apache.maven.project.MavenProject;
  */
 public class TestMavenModules extends TestCase {
 
-
-    
     public void testModuleWithAPomInTheSameDirWithMaven2() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/several-modules-in-directory/pom.xml" ).getAbsolutePath() );

@@ -71,6 +71,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -99,7 +100,7 @@ public class MavenEmbedder
     
     private final MavenRequest mavenRequest;
     
-    private MavenExecutionRequest mavenExecutionRequest;
+    private final MavenExecutionRequest mavenExecutionRequest;
     private final MavenSession mavenSession;
 
     public MavenEmbedder( File mavenHome, MavenRequest mavenRequest ) throws MavenEmbedderException {
@@ -125,9 +126,7 @@ public class MavenEmbedder
             mavenSession = new MavenSession( plexusContainer, rss, mavenExecutionRequest, new DefaultMavenExecutionResult() );
                         
             lookup(LegacySupport.class).setSession(mavenSession);
-        } catch (MavenEmbedderException e) {
-            throw new MavenEmbedderException(e.getMessage(), e);
-        } catch (ComponentLookupException e) {
+        } catch (MavenEmbedderException | ComponentLookupException e) {
             throw new MavenEmbedderException(e.getMessage(), e);
         }
     }
@@ -282,9 +281,7 @@ public class MavenEmbedder
         try {
             Settings settings = getSettings();
             path = settings.getLocalRepository();
-        } catch ( MavenEmbedderException e ) {
-            // ignore
-        } catch ( ComponentLookupException e ) {
+        } catch ( MavenEmbedderException | ComponentLookupException e ) {
             // ignore
         }
 
@@ -367,9 +364,8 @@ public class MavenEmbedder
             
             projectBuildingRequest.setResolveDependencies( this.mavenRequest.isResolveDependencies() );
     
-            List<ProjectBuildingResult> results = projectBuilder.build( Arrays.asList(mavenProject), recursive, projectBuildingRequest );
-            
-            return results;
+            return projectBuilder.build( Collections.singletonList( mavenProject), recursive, projectBuildingRequest );
+
         } catch(ComponentLookupException e) {
             throw new MavenEmbedderException(e.getMessage(), e);
         } finally {
@@ -447,11 +443,7 @@ public class MavenEmbedder
             Thread.currentThread().setContextClassLoader( this.plexusContainer.getContainerRealm() );
             return maven.execute( buildMavenExecutionRequest( mavenRequest ) );
         }
-        catch ( MavenEmbedderException e )
-        {
-            throw new MavenEmbedderException(e.getMessage(),e);
-        }
-        catch ( ComponentLookupException e )
+        catch ( MavenEmbedderException | ComponentLookupException e )
         {
             throw new MavenEmbedderException(e.getMessage(),e);
         }

@@ -19,10 +19,10 @@ package hudson.maven;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Assert;
+import org.junit.Test;
 
 import java.io.File;
 
@@ -30,9 +30,9 @@ import java.io.File;
  * @author olamy
  */
 public class TestMavenEmbedderSimpleProjectWithParent
-    extends TestCase
 {
 
+    @Test
     public void testSimpleProjectRead()
         throws Exception
     {

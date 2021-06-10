@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.maven.execution.AbstractExecutionListener;
 import org.apache.maven.execution.ExecutionEvent;
@@ -34,13 +31,19 @@ import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author olamy
  *
  */
-public class TestMavenEmbedderSimpleProject extends TestCase {
+public class TestMavenEmbedderSimpleProject {
 
+    @Test
     public void testSimpleProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/one-module/pom.xml" ).getAbsolutePath() );
@@ -52,9 +55,10 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/one-module/pom.xml" ) );
-        Assert.assertEquals("my-app", project.getArtifactId());
+        assertEquals( "my-app", project.getArtifactId());
     }
-    
+
+    @Test
     public void testSimpleProjectBuild() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setUserSettingsFile( new File(System.getProperty( "user.home"), ".m2/settings.xml" ).getAbsolutePath() );
@@ -83,13 +87,14 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
 
         System.out.println( result.getExceptions().toString() );
         
-        assertTrue( result.getExceptions().isEmpty() );
+        assertTrue(result.getExceptions().isEmpty());
         
         assertTrue(executedMojos.contains( "maven-clean-plugin" ));
         assertTrue(executedMojos.contains( "maven-surefire-plugin" ));
         
-    }  
-    
+    }
+
+    @Test
     public void testEclipsePluginProjectRead() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ).getAbsolutePath() );
@@ -101,10 +106,11 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
         
         MavenProject project = mavenEmbedder.readProject( new File( "src/test/projects-tests/eclipse-plugin/pom.xml" ) );
-        Assert.assertEquals("my-app", project.getArtifactId());
-        Assert.assertEquals("eclipse-plugin", project.getPackaging());
-    } 
-    
+        assertEquals("my-app", project.getArtifactId());
+        assertEquals("eclipse-plugin", project.getPackaging());
+    }
+
+    @Test
     public void testEclipsePluginProjectReadMultiModule() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ).getAbsolutePath() );
@@ -117,9 +123,9 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         
         List<MavenProject> projects = mavenEmbedder.readProjects( new File( "src/test/projects-tests/eclipse-plugin-with-parent/parent/pom.xml" ), true );
         assertEquals( "not 2 projects", 2, projects.size() );
-    }     
+    }
 
-    
+    @Test
     public void testWrongScopeWithMaven2() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setPom( new File( "src/test/projects-tests/test-pom-8395.xml" ).getAbsolutePath() );
@@ -132,8 +138,9 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         
         mavenEmbedder.readProjects( new File( "src/test/projects-tests/test-pom-8395.xml" ), true );
         
-    } 
-    
+    }
+
+    @Test(expected = ProjectBuildingException.class)
     public void testWrongScopeWithMaven3() throws Exception {
         MavenRequest mavenRequest = new MavenRequest();
         mavenRequest.setValidationLevel( ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_3_0 );
@@ -144,12 +151,7 @@ public class TestMavenEmbedderSimpleProject extends TestCase {
         mavenRequest.setBaseDirectory( new File( "src/test/projects-tests/" ).getAbsolutePath() );
         MavenEmbedder mavenEmbedder = new MavenEmbedder( Thread.currentThread().getContextClassLoader(), mavenRequest );
             //new MavenEmbedder( new File( System.getProperty( "maven.home" ) ), mavenRequest );
-        try  {
-            mavenEmbedder.readProjects( new File( "src/test/projects-tests/test-pom-8395.xml" ), true );
-            fail("not in ProjectBuildingException");
-        } catch (ProjectBuildingException e) {
-            // we need to pass here !
-        }
+        mavenEmbedder.readProjects( new File( "src/test/projects-tests/test-pom-8395.xml" ), true );
     }     
     
 }

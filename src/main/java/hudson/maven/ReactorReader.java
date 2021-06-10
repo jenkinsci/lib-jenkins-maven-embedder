@@ -21,7 +21,6 @@ package hudson.maven;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -63,18 +62,12 @@ public class ReactorReader
         {
             String key = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
 
-            List<MavenProject> projects = projectsByGA.get( key );
-
-            if ( projects == null )
-            {
-                projects = new ArrayList<>( 1 );
-                projectsByGA.put( key, projects );
-            }
+            List<MavenProject> projects = projectsByGA.computeIfAbsent( key, k -> new ArrayList<>( 1 ) );
 
             projects.add( project );
         }
 
-        repository = new WorkspaceRepository( "reactor", new HashSet<String>( projectsByGAV.keySet() ) );
+        repository = new WorkspaceRepository( "reactor", new HashSet<>( projectsByGAV.keySet() ) );
     }
 
     private File find( MavenProject project, Artifact artifact )
@@ -191,7 +184,7 @@ public class ReactorReader
             return Collections.emptyList();
         }
 
-        List<String> versions = new ArrayList<String>();
+        List<String> versions = new ArrayList<>();
 
         for ( MavenProject project : projects )
         {
@@ -206,7 +199,7 @@ public class ReactorReader
     
     public void addProject(MavenProject mavenProject) {
         String key = mavenProject.getGroupId() + ':' + mavenProject.getArtifactId();
-        this.projectsByGA.put( key, Arrays.asList( mavenProject ) );
+        this.projectsByGA.put( key, Collections.singletonList( mavenProject ) );
         
         String projectKey = mavenProject.getGroupId() + ':' + mavenProject.getArtifactId() + ':' + mavenProject.getVersion();
         
