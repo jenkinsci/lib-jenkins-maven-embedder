@@ -43,7 +43,6 @@ for (int i = 0; i < platforms.size(); ++i) {
 
                     if (label == 'linux') {
                       archiveArtifacts artifacts: '**/target/**/*.jar'
-                      findbugs pattern: '**/target/findbugsXml.xml'
                     }
                 }
             }
