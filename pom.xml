@@ -47,11 +47,11 @@ under the License.
   </scm>
   
   <properties>
-    <resolverVersion>1.1.1</resolverVersion>
-    <mavenVersion>3.5.4</mavenVersion>
-    <wagonVersion>3.3.2</wagonVersion>
+    <resolverVersion>1.6.2</resolverVersion>
+    <mavenVersion>3.8.1</mavenVersion>
+    <wagonVersion>3.4.3</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <slf4jVersion>1.7.25</slf4jVersion>
+    <slf4jVersion>1.7.30</slf4jVersion>
     <java.level>8</java.level>
   </properties>
 
@@ -96,11 +96,15 @@ under the License.
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <version>0.3.3</version>
+      <version>0.3.4</version>
       <exclusions>
         <exclusion>
           <groupId>org.sonatype.sisu</groupId>
           <artifactId>sisu-guice</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -108,7 +112,8 @@ under the License.
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>4.0</version>
+      <version>4.2.1</version>
+      <classifier>no_aop</classifier>
       <scope>provided</scope>
     </dependency>
 
@@ -166,12 +171,24 @@ under the License.
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-provider-api</artifactId>
       <version>${wagonVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-file</artifactId>
       <version>${wagonVersion}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
@@ -182,6 +199,10 @@ under the License.
         <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
