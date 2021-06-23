@@ -49,7 +49,7 @@ under the License.
   <properties>
     <resolverVersion>1.1.1</resolverVersion>
     <mavenVersion>3.5.4</mavenVersion>
-    <wagonVersion>3.3.2</wagonVersion>
+    <wagonVersion>3.4.3</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4jVersion>1.7.25</slf4jVersion>
     <java.level>8</java.level>
