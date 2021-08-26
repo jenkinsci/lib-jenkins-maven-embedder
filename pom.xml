@@ -47,7 +47,7 @@ under the License.
   </scm>
   
   <properties>
-    <resolverVersion>1.1.1</resolverVersion>
+    <resolverVersion>1.7.1</resolverVersion>
     <mavenVersion>3.5.4</mavenVersion>
     <wagonVersion>3.3.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -152,7 +152,7 @@ under the License.
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.10.10</version>
+      <version>1.10.11</version>
     </dependency>
 
     <dependency>
