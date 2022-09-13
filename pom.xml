@@ -52,7 +52,7 @@ under the License.
     <wagonVersion>3.3.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4jVersion>1.7.25</slf4jVersion>
-    <log4j.version>2.8</log4j.version>
+    <log4j.version>2.18.0</log4j.version>
     <java.level>8</java.level>
   </properties>
 
