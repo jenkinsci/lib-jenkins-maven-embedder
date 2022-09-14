@@ -47,7 +47,7 @@ under the License.
   </scm>
   
   <properties>
-    <resolverVersion>1.1.1</resolverVersion>
+    <resolverVersion>1.8.2</resolverVersion>
     <mavenVersion>3.5.4</mavenVersion>
     <wagonVersion>3.3.2</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
