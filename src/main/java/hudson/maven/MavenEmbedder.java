@@ -196,7 +196,6 @@ public class MavenEmbedder
             }
         }
 
-
         mavenExecutionRequest.setLoggingLevel( mavenRequest.getLoggingLevel() );
 
         lookup( Logger.class ).setThreshold( mavenRequest.getLoggingLevel() );
