@@ -21,9 +21,8 @@ package hudson.maven;
 
 import java.io.Serializable;
 
-
 /**
- * 
+ *
  * @author Olivier Lamy
  * @since 3.0
  *
@@ -33,33 +32,28 @@ public class MavenInformation implements Serializable {
     private static final long serialVersionUID = 8477909321273479507L;
 
     private final String version;
-    
-    private final String versionResourcePath;
-    
 
-    public MavenInformation( String version, String versionResourcePath ) {
+    private final String versionResourcePath;
+
+    public MavenInformation(String version, String versionResourcePath) {
         this.version = version;
         this.versionResourcePath = versionResourcePath;
     }
-
 
     public String getVersion() {
         return version;
     }
 
-
     public String getVersionResourcePath() {
         return versionResourcePath;
     }
 
-
     @Override
-    public String toString()
-    {
-        final StringBuilder sb = new StringBuilder( "MavenInformation{" );
-        sb.append( "version='" ).append( version ).append( '\'' );
-        sb.append( ", versionResourcePath='" ).append( versionResourcePath ).append( '\'' );
-        sb.append( '}' );
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("MavenInformation{");
+        sb.append("version='").append(version).append('\'');
+        sb.append(", versionResourcePath='").append(versionResourcePath).append('\'');
+        sb.append('}');
         return sb.toString();
     }
 }

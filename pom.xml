@@ -19,17 +19,17 @@ specific language governing permissions and limitations
 under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
     <version>1.113</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.jenkins-ci.lib</groupId>
   <artifactId>lib-jenkins-maven-embedder</artifactId>
+  <version>3.16-SNAPSHOT</version>
   <name>Jenkins Maven Embedder</name>
   <description>Library for Jenkins plugins and other components, which allows embedding Maven into their logic</description>
-  <version>3.16-SNAPSHOT</version>
 
   <licenses>
     <license>
@@ -38,14 +38,14 @@ under the License.
       <distribution>repo</distribution>
     </license>
   </licenses>
-   
+
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/lib-jenkins-maven-embedder.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/lib-jenkins-maven-embedder.git</developerConnection>
-    <url>https://github.com/jenkinsci/lib-jenkins-maven-embedder</url>
     <tag>HEAD</tag>
+    <url>https://github.com/jenkinsci/lib-jenkins-maven-embedder</url>
   </scm>
-  
+
   <properties>
     <resolverVersion>1.9.19</resolverVersion>
     <mavenVersion>3.9.6</mavenVersion>
@@ -56,29 +56,42 @@ under the License.
     <java.level>11</java.level>
     <!-- TODO (or not) fix existing violatiosn -->
     <spotbugs.threshold>High</spotbugs.threshold>
+    <spotless.check.skip>false</spotless.check.skip>
   </properties>
 
   <dependencies>
+
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-classworlds</artifactId>
-      <version>2.7.0</version>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.10.11</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-compat</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>    
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-compat</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>    
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-embedder</artifactId>
@@ -91,44 +104,13 @@ under the License.
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-cipher</artifactId>
-      <version>2.0</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <version>0.9.0.M2</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.sonatype.sisu</groupId>
-          <artifactId>sisu-guice</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-      <version>5.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven.resolver</groupId>
-      <artifactId>maven-resolver-transport-wagon</artifactId>
-      <version>${resolverVersion}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-container-default</artifactId>
-        </exclusion>
-      </exclusions>      
-    </dependency>    
-    <dependency>
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-api</artifactId>
+      <version>${resolverVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-connector-basic</artifactId>
       <version>${resolverVersion}</version>
     </dependency>
     <dependency>
@@ -141,34 +123,83 @@ under the License.
       <artifactId>maven-resolver-spi</artifactId>
       <version>${resolverVersion}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-wagon</artifactId>
+      <version>${resolverVersion}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-container-default</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <dependency>
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-util</artifactId>
       <version>${resolverVersion}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven.resolver</groupId>
-      <artifactId>maven-resolver-connector-basic</artifactId>
-      <version>${resolverVersion}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.10.11</version>
-    </dependency>
 
-    <dependency>
-      <groupId>com.github.spotbugs</groupId>
-      <artifactId>spotbugs-annotations</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    
     <!--  Wagon -->
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
       <artifactId>wagon-provider-api</artifactId>
       <version>${wagonVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-cipher</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-classworlds</artifactId>
+      <version>2.7.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.plexus</artifactId>
+      <version>0.9.0.M2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonatype.sisu</groupId>
+          <artifactId>sisu-guice</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+      <version>3.0.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>5.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.wagon</groupId>
@@ -189,14 +220,9 @@ under the License.
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.7</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4jVersion}</version>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>test-annotations</artifactId>
+      <version>1.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -206,40 +232,41 @@ under the License.
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${log4j.version}</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4jVersion}</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-      <version>${log4j.version}</version>
-      <scope>test</scope>
-    </dependency>    
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jenkins-ci</groupId>
-      <artifactId>test-annotations</artifactId>
-      <version>1.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-      <version>3.0.2</version>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
-  
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>m.g.o-public</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>m.g.o-public</id>
+      <url>https://repo.jenkins-ci.org/public/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
-     
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -250,7 +277,7 @@ under the License.
             <goals>deploy</goals>
             <useReleaseProfile>false</useReleaseProfile>
             <arguments>-Pjenkins-release</arguments>
-          </configuration>  
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -297,11 +324,11 @@ under the License.
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
+            <id>ensure-no-plexus-librairies</id>
             <goals>
               <goal>enforce</goal>
             </goals>
             <phase>validate</phase>
-            <id>ensure-no-plexus-librairies</id>
             <configuration>
               <rules>
                 <bannedDependencies>
@@ -310,9 +337,7 @@ under the License.
                     <exclude>org.sonatype.sisu:sisu-guice</exclude>
                     <exclude>org.sonatype.plexus:plexus-cipher</exclude>
                   </excludes>
-                  <message>
-                  ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.
-                  </message>
+                  <message>ensure-no-plexus-container doesn't work anymore with maven 3 librairies. you have to add some exclusions.</message>
                 </bannedDependencies>
                 <requireUpperBoundDeps>
                   <excludes>
@@ -324,7 +349,7 @@ under the License.
             </configuration>
           </execution>
         </executions>
-      </plugin>    
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -338,32 +363,6 @@ under the License.
       </plugin>
     </plugins>
   </build>
-  
-  <repositories>
-    <repository>
-      <id>m.g.o-public</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>m.g.o-public</id>
-      <url>https://repo.jenkins-ci.org/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 
   <profiles>
 
@@ -394,11 +393,11 @@ under the License.
                 </goals>
               </execution>
             </executions>
-          </plugin>        
+          </plugin>
         </plugins>
       </build>
     </profile>
-    
+
   </profiles>
-  
+
 </project>

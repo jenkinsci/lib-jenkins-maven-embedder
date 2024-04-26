@@ -23,12 +23,10 @@ package hudson.maven;
  * @author olamy
  *
  */
-public class MavenEmbedderException
-    extends Exception
-{
+public class MavenEmbedderException extends Exception {
 
     /**
-     * 
+     *
      */
     public MavenEmbedderException() {
         // no op
@@ -37,23 +35,22 @@ public class MavenEmbedderException
     /**
      * @param message
      */
-    public MavenEmbedderException( String message ) {
-        super( message );
+    public MavenEmbedderException(String message) {
+        super(message);
     }
 
     /**
      * @param cause
      */
-    public MavenEmbedderException( Throwable cause ) {
-        super( cause );
+    public MavenEmbedderException(Throwable cause) {
+        super(cause);
     }
 
     /**
      * @param message
      * @param cause
      */
-    public MavenEmbedderException( String message, Throwable cause ) {
-        super( message, cause );
+    public MavenEmbedderException(String message, Throwable cause) {
+        super(message, cause);
     }
-
 }
