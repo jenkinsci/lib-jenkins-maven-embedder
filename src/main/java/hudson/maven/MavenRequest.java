@@ -22,7 +22,6 @@ package hudson.maven;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-
 import org.apache.maven.execution.ExecutionListener;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.building.ModelBuildingRequest;
@@ -35,92 +34,91 @@ import org.eclipse.aether.transfer.TransferListener;
  * @author olamy
  *
  */
-public class MavenRequest
-{
+public class MavenRequest {
 
     private String globalSettingsFile;
-    
+
     private String userSettingsFile;
-    
+
     private String localRepositoryPath;
-    
+
     private boolean offline;
-    
+
     private TransferListener transferListener;
-    
+
     private String baseDirectory;
-    
+
     private List<String> goals;
-    
+
     private Properties systemProperties;
-    
+
     private Properties userProperties;
-    
+
     private String failureBehavior;
-    
+
     private List<String> selectedProjects;
-    
+
     private String resumeFromProject;
-    
+
     private String makeBehavior;
-    
+
     private String threadCount;
-    
+
     private boolean recursive;
-    
+
     private String pom;
-    
+
     private boolean showErrors;
 
     /**
      * @see org.apache.maven.execution.MavenExecutionRequest
      */
     private int loggingLevel = MavenExecutionRequest.LOGGING_LEVEL_INFO;
-    
+
     private boolean updateSnapshots;
-    
+
     private boolean noSnapshotUpdates;
-    
+
     private String globalChecksumPolicy;
-    
+
     private boolean interactive;
-    
+
     private boolean cacheTransferError = true;
-    
+
     private boolean cacheNotFound = true;
-    
+
     private List<String> profiles;
-    
+
     private ExecutionListener executionListener;
-    
+
     private WorkspaceReader workspaceReader;
-    
+
     private LoggerManager mavenLoggerManager;
-    
+
     /**
      * plexus configuration override
      */
     private URL overridingComponentsXml;
-    
+
     /**
      * will processPlugins during project reading
      * @since 3.2
      */
     private boolean processPlugins;
-    
+
     /**
      * will resolve dependencies during project reading
      * @since 3.2
-     */    
+     */
     private boolean resolveDependencies;
-    
+
     /**
      * level of validation when reading pom (ie model building request)
      * default {@link ModelBuildingRequest#VALIDATION_LEVEL_MAVEN_2_0} etc...
      * @since 3.2
-     */    
+     */
     private int validationLevel = ModelBuildingRequest.VALIDATION_LEVEL_MAVEN_2_0;
-    
+
     /**
      * @since 3.3
      */
@@ -128,14 +126,14 @@ public class MavenRequest
 
     /**
      * @since 3.3
-     */    
+     */
     private String containerComponentVisibility = PlexusConstants.REALM_VISIBILITY;
 
     /**
      * @since 3.3
-     */    
+     */
     private String containerClassPathScanning = PlexusConstants.SCANNING_INDEX;
-    
+
     public MavenRequest() {
         // no op
     }
@@ -144,7 +142,7 @@ public class MavenRequest
         return globalSettingsFile;
     }
 
-    public MavenRequest setGlobalSettingsFile( String globalSettingsFile ) {
+    public MavenRequest setGlobalSettingsFile(String globalSettingsFile) {
         this.globalSettingsFile = globalSettingsFile;
         return this;
     }
@@ -153,7 +151,7 @@ public class MavenRequest
         return userSettingsFile;
     }
 
-    public MavenRequest setUserSettingsFile( String userSettingsFile ) {
+    public MavenRequest setUserSettingsFile(String userSettingsFile) {
         this.userSettingsFile = userSettingsFile;
         return this;
     }
@@ -162,7 +160,7 @@ public class MavenRequest
         return localRepositoryPath;
     }
 
-    public MavenRequest setLocalRepositoryPath( String localRepositoryPath ) {
+    public MavenRequest setLocalRepositoryPath(String localRepositoryPath) {
         this.localRepositoryPath = localRepositoryPath;
         return this;
     }
@@ -171,7 +169,7 @@ public class MavenRequest
         return offline;
     }
 
-    public MavenRequest setOffline( boolean offline ) {
+    public MavenRequest setOffline(boolean offline) {
         this.offline = offline;
         return this;
     }
@@ -180,7 +178,7 @@ public class MavenRequest
         return transferListener;
     }
 
-    public MavenRequest setTransferListener( TransferListener transferListener ) {
+    public MavenRequest setTransferListener(TransferListener transferListener) {
         this.transferListener = transferListener;
         return this;
     }
@@ -189,7 +187,7 @@ public class MavenRequest
         return baseDirectory;
     }
 
-    public MavenRequest setBaseDirectory( String baseDirectory ) {
+    public MavenRequest setBaseDirectory(String baseDirectory) {
         this.baseDirectory = baseDirectory;
         return this;
     }
@@ -198,7 +196,7 @@ public class MavenRequest
         return goals;
     }
 
-    public MavenRequest setGoals( List<String> goals ) {
+    public MavenRequest setGoals(List<String> goals) {
         this.goals = goals;
         return this;
     }
@@ -206,12 +204,12 @@ public class MavenRequest
     public Properties getSystemProperties() {
         if (this.systemProperties == null) {
             this.systemProperties = new Properties();
-            this.systemProperties.putAll( System.getProperties() );
+            this.systemProperties.putAll(System.getProperties());
         }
         return systemProperties;
     }
 
-    public MavenRequest setSystemProperties( Properties systemProperties ) {
+    public MavenRequest setSystemProperties(Properties systemProperties) {
         this.systemProperties = systemProperties;
         return this;
     }
@@ -219,11 +217,11 @@ public class MavenRequest
     public Properties getUserProperties() {
         if (this.userProperties == null) {
             this.userProperties = new Properties();
-        }        
+        }
         return userProperties;
     }
 
-    public MavenRequest setUserProperties( Properties userProperties ) {
+    public MavenRequest setUserProperties(Properties userProperties) {
         this.userProperties = userProperties;
         return this;
     }
@@ -232,7 +230,7 @@ public class MavenRequest
         return failureBehavior;
     }
 
-    public MavenRequest setFailureBehavior( String failureBehavior ) {
+    public MavenRequest setFailureBehavior(String failureBehavior) {
         this.failureBehavior = failureBehavior;
         return this;
     }
@@ -241,7 +239,7 @@ public class MavenRequest
         return selectedProjects;
     }
 
-    public MavenRequest setSelectedProjects( List<String> selectedProjects ) {
+    public MavenRequest setSelectedProjects(List<String> selectedProjects) {
         this.selectedProjects = selectedProjects;
         return this;
     }
@@ -250,7 +248,7 @@ public class MavenRequest
         return resumeFromProject;
     }
 
-    public MavenRequest setResumeFromProject( String resumeFromProject ) {
+    public MavenRequest setResumeFromProject(String resumeFromProject) {
         this.resumeFromProject = resumeFromProject;
         return this;
     }
@@ -259,7 +257,7 @@ public class MavenRequest
         return makeBehavior;
     }
 
-    public MavenRequest setMakeBehavior( String makeBehavior ) {
+    public MavenRequest setMakeBehavior(String makeBehavior) {
         this.makeBehavior = makeBehavior;
         return this;
     }
@@ -268,7 +266,7 @@ public class MavenRequest
         return threadCount;
     }
 
-    public MavenRequest setThreadCount( String threadCount ) {
+    public MavenRequest setThreadCount(String threadCount) {
         this.threadCount = threadCount;
         return this;
     }
@@ -277,7 +275,7 @@ public class MavenRequest
         return recursive;
     }
 
-    public MavenRequest setRecursive( boolean recursive ) {
+    public MavenRequest setRecursive(boolean recursive) {
         this.recursive = recursive;
         return this;
     }
@@ -286,7 +284,7 @@ public class MavenRequest
         return pom;
     }
 
-    public MavenRequest setPom( String pom ) {
+    public MavenRequest setPom(String pom) {
         this.pom = pom;
         return this;
     }
@@ -295,7 +293,7 @@ public class MavenRequest
         return showErrors;
     }
 
-    public MavenRequest setShowErrors( boolean showErrors ) {
+    public MavenRequest setShowErrors(boolean showErrors) {
         this.showErrors = showErrors;
         return this;
     }
@@ -304,7 +302,7 @@ public class MavenRequest
         return loggingLevel;
     }
 
-    public MavenRequest setLoggingLevel( int loggingLevel ) {
+    public MavenRequest setLoggingLevel(int loggingLevel) {
         this.loggingLevel = loggingLevel;
         return this;
     }
@@ -313,7 +311,7 @@ public class MavenRequest
         return updateSnapshots;
     }
 
-    public MavenRequest setUpdateSnapshots( boolean updateSnapshots ) {
+    public MavenRequest setUpdateSnapshots(boolean updateSnapshots) {
         this.updateSnapshots = updateSnapshots;
         return this;
     }
@@ -322,7 +320,7 @@ public class MavenRequest
         return noSnapshotUpdates;
     }
 
-    public MavenRequest setNoSnapshotUpdates( boolean noSnapshotUpdates ) {
+    public MavenRequest setNoSnapshotUpdates(boolean noSnapshotUpdates) {
         this.noSnapshotUpdates = noSnapshotUpdates;
         return this;
     }
@@ -331,7 +329,7 @@ public class MavenRequest
         return globalChecksumPolicy;
     }
 
-    public MavenRequest setGlobalChecksumPolicy( String globalChecksumPolicy ) {
+    public MavenRequest setGlobalChecksumPolicy(String globalChecksumPolicy) {
         this.globalChecksumPolicy = globalChecksumPolicy;
         return this;
     }
@@ -340,7 +338,7 @@ public class MavenRequest
         return interactive;
     }
 
-    public MavenRequest setInteractive( boolean interactive ) {
+    public MavenRequest setInteractive(boolean interactive) {
         this.interactive = interactive;
         return this;
     }
@@ -349,7 +347,7 @@ public class MavenRequest
         return cacheTransferError;
     }
 
-    public MavenRequest setCacheTransferError( boolean cacheTransferError ) {
+    public MavenRequest setCacheTransferError(boolean cacheTransferError) {
         this.cacheTransferError = cacheTransferError;
         return this;
     }
@@ -358,7 +356,7 @@ public class MavenRequest
         return cacheNotFound;
     }
 
-    public MavenRequest setCacheNotFound( boolean cacheNotFound ) {
+    public MavenRequest setCacheNotFound(boolean cacheNotFound) {
         this.cacheNotFound = cacheNotFound;
         return this;
     }
@@ -367,7 +365,7 @@ public class MavenRequest
         return profiles;
     }
 
-    public MavenRequest setProfiles( List<String> profiles ) {
+    public MavenRequest setProfiles(List<String> profiles) {
         this.profiles = profiles;
         return this;
     }
@@ -376,7 +374,7 @@ public class MavenRequest
         return executionListener;
     }
 
-    public MavenRequest setExecutionListener( ExecutionListener executionListener ) {
+    public MavenRequest setExecutionListener(ExecutionListener executionListener) {
         this.executionListener = executionListener;
         return this;
     }
@@ -385,7 +383,7 @@ public class MavenRequest
         return workspaceReader;
     }
 
-    public MavenRequest setWorkspaceReader( WorkspaceReader workspaceReader ) {
+    public MavenRequest setWorkspaceReader(WorkspaceReader workspaceReader) {
         this.workspaceReader = workspaceReader;
         return this;
     }
@@ -394,7 +392,7 @@ public class MavenRequest
         return mavenLoggerManager;
     }
 
-    public MavenRequest setMavenLoggerManager( LoggerManager mavenLoggerManager ) {
+    public MavenRequest setMavenLoggerManager(LoggerManager mavenLoggerManager) {
         this.mavenLoggerManager = mavenLoggerManager;
         return this;
     }
@@ -403,7 +401,7 @@ public class MavenRequest
         return overridingComponentsXml;
     }
 
-    public MavenRequest setOverridingComponentsXml( URL overridingComponentsXml ) {
+    public MavenRequest setOverridingComponentsXml(URL overridingComponentsXml) {
         this.overridingComponentsXml = overridingComponentsXml;
         return this;
     }
@@ -412,7 +410,7 @@ public class MavenRequest
         return processPlugins;
     }
 
-    public MavenRequest setProcessPlugins( boolean processPlugins ) {
+    public MavenRequest setProcessPlugins(boolean processPlugins) {
         this.processPlugins = processPlugins;
         return this;
     }
@@ -421,50 +419,41 @@ public class MavenRequest
         return resolveDependencies;
     }
 
-    public MavenRequest setResolveDependencies( boolean resolveDependencies ) {
+    public MavenRequest setResolveDependencies(boolean resolveDependencies) {
         this.resolveDependencies = resolveDependencies;
         return this;
     }
 
-    public int getValidationLevel()
-    {
+    public int getValidationLevel() {
         return validationLevel;
     }
 
-    public MavenRequest setValidationLevel( int validationLevel )
-    {
+    public MavenRequest setValidationLevel(int validationLevel) {
         this.validationLevel = validationLevel;
         return this;
     }
 
-    public boolean isContainerAutoWiring()
-    {
+    public boolean isContainerAutoWiring() {
         return containerAutoWiring;
     }
 
-    public void setContainerAutoWiring( boolean containerAutoWiring )
-    {
+    public void setContainerAutoWiring(boolean containerAutoWiring) {
         this.containerAutoWiring = containerAutoWiring;
     }
 
-    public String getContainerComponentVisibility()
-    {
+    public String getContainerComponentVisibility() {
         return containerComponentVisibility;
     }
 
-    public void setContainerComponentVisibility( String containerComponentVisibility )
-    {
+    public void setContainerComponentVisibility(String containerComponentVisibility) {
         this.containerComponentVisibility = containerComponentVisibility;
     }
 
-    public String getContainerClassPathScanning()
-    {
+    public String getContainerClassPathScanning() {
         return containerClassPathScanning;
     }
 
-    public void setContainerClassPathScanning( String containerClassPathScanning )
-    {
+    public void setContainerClassPathScanning(String containerClassPathScanning) {
         this.containerClassPathScanning = containerClassPathScanning;
     }
-
 }

@@ -17,11 +17,11 @@ package hudson.maven;
 
 /**
  * Callable interface for the Maven Embedder logic.
- * 
+ *
  * Used primarily for testing purposes.
  * @author Oleg Nenashev
  */
 /*package*/ interface MavenEmbedderCallable {
-    
+
     void call() throws MavenEmbedderException;
 }

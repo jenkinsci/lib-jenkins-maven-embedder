@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.artifact.Artifact;
@@ -36,15 +35,13 @@ import org.eclipse.aether.repository.WorkspaceRepository;
 
 /**
  * NOTE : <b>this class is not designed for external use so it can change without any prior notice</b>
- * class coming from ASF sources 
+ * class coming from ASF sources
  * http://svn.apache.org/repos/asf/maven/maven-3/trunk/maven-core/src/main/java/org/apache/maven/ReactorReader.java
  * FIXME simplify more !!
  * @author Olivier Lamy
  * @since 1.1
  */
-public class ReactorReader
-    implements WorkspaceReader
-{
+public class ReactorReader implements WorkspaceReader {
     private Map<String, MavenProject> projectsByGAV;
 
     private Map<String, List<MavenProject>> projectsByGA;
@@ -53,33 +50,28 @@ public class ReactorReader
 
     private File workspaceRoot;
 
-    public ReactorReader( Map<String, MavenProject> reactorProjects, File workspaceRoot )
-    {
+    public ReactorReader(Map<String, MavenProject> reactorProjects, File workspaceRoot) {
         projectsByGAV = reactorProjects;
         this.workspaceRoot = workspaceRoot;
-        projectsByGA = new HashMap<>( reactorProjects.size() * 2 );
-        for ( MavenProject project : reactorProjects.values() )
-        {
-            String key = ArtifactUtils.versionlessKey( project.getGroupId(), project.getArtifactId() );
+        projectsByGA = new HashMap<>(reactorProjects.size() * 2);
+        for (MavenProject project : reactorProjects.values()) {
+            String key = ArtifactUtils.versionlessKey(project.getGroupId(), project.getArtifactId());
 
-            List<MavenProject> projects = projectsByGA.computeIfAbsent( key, k -> new ArrayList<>( 1 ) );
+            List<MavenProject> projects = projectsByGA.computeIfAbsent(key, k -> new ArrayList<>(1));
 
-            projects.add( project );
+            projects.add(project);
         }
 
-        repository = new WorkspaceRepository( "reactor", new HashSet<>( projectsByGAV.keySet() ) );
+        repository = new WorkspaceRepository("reactor", new HashSet<>(projectsByGAV.keySet()));
     }
 
-    private File find( MavenProject project, Artifact artifact )
-    {
-        if ( "pom".equals( artifact.getExtension() ) )
-        {
+    private File find(MavenProject project, Artifact artifact) {
+        if ("pom".equals(artifact.getExtension())) {
             return project.getFile();
         }
 
-        org.apache.maven.artifact.Artifact matchingArtifact = findMatchingArtifact( project, artifact );
-        if ( matchingArtifact != null )
-        {
+        org.apache.maven.artifact.Artifact matchingArtifact = findMatchingArtifact(project, artifact);
+        if (matchingArtifact != null) {
             return matchingArtifact.getFile();
         }
         return null;
@@ -87,30 +79,25 @@ public class ReactorReader
 
     /**
      * Tries to resolve the specified artifact from the artifacts of the given project.
-     * 
+     *
      * @param project The project to try to resolve the artifact from, must not be <code>null</code>.
      * @param requestedArtifact The artifact to resolve, must not be <code>null</code>.
      * @return The matching artifact from the project or <code>null</code> if not found.
      */
-    private org.apache.maven.artifact.Artifact findMatchingArtifact( MavenProject project, Artifact requestedArtifact )
-    {
-        String requestedRepositoryConflictId = getConflictId( requestedArtifact );
+    private org.apache.maven.artifact.Artifact findMatchingArtifact(MavenProject project, Artifact requestedArtifact) {
+        String requestedRepositoryConflictId = getConflictId(requestedArtifact);
 
         org.apache.maven.artifact.Artifact mainArtifact = project.getArtifact();
-        if ( requestedRepositoryConflictId.equals( getConflictId( mainArtifact ) ) )
-        {
-            mainArtifact.setFile( new File( workspaceRoot, project.getArtifactId() ) );
+        if (requestedRepositoryConflictId.equals(getConflictId(mainArtifact))) {
+            mainArtifact.setFile(new File(workspaceRoot, project.getArtifactId()));
             return mainArtifact;
         }
 
         Collection<org.apache.maven.artifact.Artifact> attachedArtifacts = project.getAttachedArtifacts();
-        if ( attachedArtifacts != null && !attachedArtifacts.isEmpty() )
-        {
-            for ( org.apache.maven.artifact.Artifact attachedArtifact : attachedArtifacts )
-            {
-                if ( requestedRepositoryConflictId.equals( getConflictId( attachedArtifact ) ) )
-                {
-                    attachedArtifact.setFile( new File( workspaceRoot, project.getArtifactId() ) );
+        if (attachedArtifacts != null && !attachedArtifacts.isEmpty()) {
+            for (org.apache.maven.artifact.Artifact attachedArtifact : attachedArtifacts) {
+                if (requestedRepositoryConflictId.equals(getConflictId(attachedArtifact))) {
+                    attachedArtifact.setFile(new File(workspaceRoot, project.getArtifactId()));
                     return attachedArtifact;
                 }
             }
@@ -123,91 +110,78 @@ public class ReactorReader
      * Gets the repository conflict id of the specified artifact. Unlike the dependency conflict id, the repository
      * conflict id uses the artifact file extension instead of the artifact type. Hence, the repository conflict id more
      * closely reflects the identity of artifacts as perceived by a repository.
-     * 
+     *
      * @param artifact The artifact, must not be <code>null</code>.
      * @return The repository conflict id, never <code>null</code>.
      */
-    private String getConflictId( org.apache.maven.artifact.Artifact artifact )
-    {
-        StringBuilder buffer = new StringBuilder( 128 );
-        buffer.append( artifact.getGroupId() );
-        buffer.append( ':' ).append( artifact.getArtifactId() );
-        if ( artifact.getArtifactHandler() != null )
-        {
-            buffer.append( ':' ).append( artifact.getArtifactHandler().getExtension() );
+    private String getConflictId(org.apache.maven.artifact.Artifact artifact) {
+        StringBuilder buffer = new StringBuilder(128);
+        buffer.append(artifact.getGroupId());
+        buffer.append(':').append(artifact.getArtifactId());
+        if (artifact.getArtifactHandler() != null) {
+            buffer.append(':').append(artifact.getArtifactHandler().getExtension());
+        } else {
+            buffer.append(':').append(artifact.getType());
         }
-        else
-        {
-            buffer.append( ':' ).append( artifact.getType() );
-        }
-        if ( artifact.hasClassifier() )
-        {
-            buffer.append( ':' ).append( artifact.getClassifier() );
+        if (artifact.hasClassifier()) {
+            buffer.append(':').append(artifact.getClassifier());
         }
         return buffer.toString();
     }
 
-    private String getConflictId( Artifact artifact )
-    {
-        StringBuilder buffer = new StringBuilder( 128 );
-        buffer.append( artifact.getGroupId() );
-        buffer.append( ':' ).append( artifact.getArtifactId() );
-        buffer.append( ':' ).append( artifact.getExtension() );
-        if ( artifact.getClassifier().length() > 0 )
-        {
-            buffer.append( ':' ).append( artifact.getClassifier() );
+    private String getConflictId(Artifact artifact) {
+        StringBuilder buffer = new StringBuilder(128);
+        buffer.append(artifact.getGroupId());
+        buffer.append(':').append(artifact.getArtifactId());
+        buffer.append(':').append(artifact.getExtension());
+        if (artifact.getClassifier().length() > 0) {
+            buffer.append(':').append(artifact.getClassifier());
         }
         return buffer.toString();
     }
 
-    public File findArtifact( Artifact artifact )
-    {
+    public File findArtifact(Artifact artifact) {
         String projectKey = artifact.getGroupId() + ':' + artifact.getArtifactId() + ':' + artifact.getVersion();
 
-        MavenProject project = projectsByGAV.get( projectKey );
+        MavenProject project = projectsByGAV.get(projectKey);
 
-        if ( project != null )
-        {
-            return find( project, artifact );
+        if (project != null) {
+            return find(project, artifact);
         }
 
         return null;
     }
 
-    public List<String> findVersions( Artifact artifact )
-    {
+    public List<String> findVersions(Artifact artifact) {
         String key = artifact.getGroupId() + ':' + artifact.getArtifactId();
 
-        List<MavenProject> projects = projectsByGA.get( key );
-        if ( projects == null || projects.isEmpty() )
-        {
+        List<MavenProject> projects = projectsByGA.get(key);
+        if (projects == null || projects.isEmpty()) {
             return Collections.emptyList();
         }
 
         List<String> versions = new ArrayList<>();
 
-        for ( MavenProject project : projects )
-        {
-            if ( find( project, artifact ) != null )
-            {
-                versions.add( project.getVersion() );
+        for (MavenProject project : projects) {
+            if (find(project, artifact) != null) {
+                versions.add(project.getVersion());
             }
         }
 
-        return Collections.unmodifiableList( versions );
-    }
-    
-    public void addProject(MavenProject mavenProject) {
-        String key = mavenProject.getGroupId() + ':' + mavenProject.getArtifactId();
-        this.projectsByGA.put( key, Collections.singletonList( mavenProject ) );
-        
-        String projectKey = mavenProject.getGroupId() + ':' + mavenProject.getArtifactId() + ':' + mavenProject.getVersion();
-        
-        this.projectsByGAV.put( projectKey, mavenProject );
+        return Collections.unmodifiableList(versions);
     }
 
-    public WorkspaceRepository getRepository()
-    {
+    public void addProject(MavenProject mavenProject) {
+        String key = mavenProject.getGroupId() + ':' + mavenProject.getArtifactId();
+        this.projectsByGA.put(key, Collections.singletonList(mavenProject));
+
+        String projectKey =
+                mavenProject.getGroupId() + ':' + mavenProject.getArtifactId() + ':' + mavenProject.getVersion();
+
+        this.projectsByGAV.put(projectKey, mavenProject);
+    }
+
+    public WorkspaceRepository getRepository() {
         return repository;
     }
 }
