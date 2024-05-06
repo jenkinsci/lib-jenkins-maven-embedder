@@ -52,7 +52,7 @@ under the License.
     <wagonVersion>3.5.3</wagonVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <slf4jVersion>1.7.36</slf4jVersion>
-    <log4j.version>2.18.0</log4j.version>
+    <log4j.version>2.23.1</log4j.version>
     <java.level>11</java.level>
     <!-- TODO (or not) fix existing violatiosn -->
     <spotbugs.threshold>High</spotbugs.threshold>
